@@ -26,12 +26,21 @@ def test_content(response):
     # assert 'GitHub' in BeautifulSoup(response.content).title.string
 
 
+def test_cpr_mask(response):
+    """Tests CPR mask on pre-defined text"""
+
+    test_string = "Hej med dig, mit CPR nr er 010203-2010"
+    test_output = "Hej med dig, mit CPR nr er <CPR>"
+
+    assert textanonymization.mask_cpr(test_string) == test_output
+
+
 def test_command_line_interface():
     """Test the CLI."""
     runner = CliRunner()
     result = runner.invoke(cli.main)
     assert result.exit_code == 0
-    assert 'textanonymization.cli.main' in result.output
-    help_result = runner.invoke(cli.main, ['--help'])
+    assert "textanonymization.cli.main" in result.output
+    help_result = runner.invoke(cli.main, ["--help"])
     assert help_result.exit_code == 0
-    assert '--help  Show this message and exit.' in help_result.output
+    assert "--help  Show this message and exit." in help_result.output
