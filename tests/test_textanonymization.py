@@ -61,13 +61,20 @@ def test_corpus_mask(response):
 
     test_corpus = [
         "Hej, jeg hedder Martin Jespersen, er 20 år, mit cpr er 010203-2010,"
-        "telefon: +4545454545 og email: martin.martin@gmail.com"
+        "telefon: +4545454545 og email: martin.martin@gmail.com",
+        "Hej, jeg hedder Martin Jespersen og er fra Danmark og arbejder i "
+        "Deloitte, mit cpr er 010203-2010, telefon: +4545454545 "
+        "og email: martin.martin@gmail.com",
     ]
     test_output = [
-        "Hej, jeg hedder Martin Jespersen, er 20 år, mit cpr er [CPR],"
-        "telefon: [TELEFON] og email: [EMAIL]"
+        "Hej, jeg hedder [PERSON], er 20 år, mit cpr er [CPR],"
+        "telefon: [TELEFON] og email: [EMAIL]",
+        "Hej, jeg hedder [PERSON] og er fra [LOKATION] og arbejder i "
+        "[ORGANISATION], mit cpr er [CPR], telefon: [TELEFON] "
+        "og email: [EMAIL]",
     ]
     CorpusObj = textanonymization.TextAnonymizer(test_corpus)
+    CorpusObj._load_NER_model("danlp")
     masked_corpus = CorpusObj.mask_corpus()
 
     assert masked_corpus == test_output, "{}\nvs.\n{}".format(
