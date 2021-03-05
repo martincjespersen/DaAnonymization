@@ -1,11 +1,14 @@
 """Main module."""
+
+from typing import List
+
 import re
 
 
 class TextAnonymizer(object):
     """docstring for TextAnonymizer"""
 
-    def __init__(self, corpus):
+    def __init__(self, corpus: List[str]):
         super(TextAnonymizer, self).__init__()
         self.corpus = corpus
 
@@ -46,3 +49,19 @@ class TextAnonymizer(object):
             text.replace(email, "[EMAIL]")
 
         return text
+
+    def mask_corpus(
+        self, masking_methods: List[str] = ["cpr", "telefon", "email"]
+    ) -> List[str]:
+        methods = {
+            "cpr": self.mask_cpr,
+            "telefon": self.mask_telefon_nr,
+            "email": self.mask_email,
+        }
+
+        for method in methods:
+            print(self.corpus)
+            self.corpus = list(map(methods[method], self.corpus))
+            print(self.corpus)
+
+        return self.corpus

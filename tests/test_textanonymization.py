@@ -53,6 +53,25 @@ def test_email_mask(response):
     assert textanonymization.mask_email(test_string) == test_output
 
 
+def test_corpus_mask(response):
+    """Tests CPR mask on pre-defined text"""
+
+    test_corpus = [
+        """Hej, jeg hedder Martin Jespersen, er 20 år, mit cpr er 010203-2010,
+        telefon: +4545454545 og email: martin.martin@gmail.com"""
+    ]
+    test_output = [
+        """Hej, jeg hedder Martin Jespersen, er 20 år, mit cpr er [CPR],
+        telefon: [TELEFON] og email: [EMAIL]"""
+    ]
+    CorpusObj = textanonymization.TextAnonymizer(test_corpus)
+    masked_corpus = CorpusObj.mask_corpus()
+
+    assert masked_corpus == test_output, "{}\nvs.\n{}".format(
+        masked_corpus[0], test_output[0]
+    )
+
+
 def test_command_line_interface():
     """Test the CLI."""
     runner = CliRunner()
