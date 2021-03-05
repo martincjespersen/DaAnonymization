@@ -30,9 +30,27 @@ def test_cpr_mask(response):
     """Tests CPR mask on pre-defined text"""
 
     test_string = "Hej med dig, mit CPR nr er 010203-2010"
-    test_output = "Hej med dig, mit CPR nr er <CPR>"
+    test_output = "Hej med dig, mit CPR nr er [CPR]"
 
     assert textanonymization.mask_cpr(test_string) == test_output
+
+
+def test_tlf_mask(response):
+    """Tests CPR mask on pre-defined text"""
+
+    test_string = "Hej med dig, mit telefon nr er +4545454545"
+    test_output = "Hej med dig, mit telefon nr er [TELEFON]"
+
+    assert textanonymization.mask_telefon_nr(test_string) == test_output
+
+
+def test_email_mask(response):
+    """Tests CPR mask on pre-defined text"""
+
+    test_string = "Hej med dig, min email er jakob.jakobsen@gmail.com"
+    test_output = "Hej med dig, min email er [EMAIL]"
+
+    assert textanonymization.mask_email(test_string) == test_output
 
 
 def test_command_line_interface():
