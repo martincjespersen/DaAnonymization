@@ -31,38 +31,41 @@ def test_cpr_mask(response):
 
     test_string = "Hej med dig, mit CPR nr er 010203-2010"
     test_output = "Hej med dig, mit CPR nr er [CPR]"
+    output = textanonymization.TextAnonymizer.mask_cpr(test_string)
 
-    assert textanonymization.mask_cpr(test_string) == test_output
+    assert output == test_output
 
 
 def test_tlf_mask(response):
-    """Tests CPR mask on pre-defined text"""
+    """Tests telephone mask on pre-defined text"""
 
     test_string = "Hej med dig, mit telefon nr er +4545454545"
     test_output = "Hej med dig, mit telefon nr er [TELEFON]"
+    output = textanonymization.TextAnonymizer.mask_telefon_nr(test_string)
 
-    assert textanonymization.mask_telefon_nr(test_string) == test_output
+    assert output == test_output
 
 
 def test_email_mask(response):
-    """Tests CPR mask on pre-defined text"""
+    """Tests email mask on pre-defined text"""
 
     test_string = "Hej med dig, min email er jakob.jakobsen@gmail.com"
     test_output = "Hej med dig, min email er [EMAIL]"
+    output = textanonymization.TextAnonymizer.mask_email(test_string)
 
-    assert textanonymization.mask_email(test_string) == test_output
+    assert output == test_output
 
 
 def test_corpus_mask(response):
-    """Tests CPR mask on pre-defined text"""
+    """Tests all masks on pre-defined text"""
 
     test_corpus = [
-        """Hej, jeg hedder Martin Jespersen, er 20 år, mit cpr er 010203-2010,
-        telefon: +4545454545 og email: martin.martin@gmail.com"""
+        "Hej, jeg hedder Martin Jespersen, er 20 år, mit cpr er 010203-2010,"
+        "telefon: +4545454545 og email: martin.martin@gmail.com"
     ]
     test_output = [
-        """Hej, jeg hedder Martin Jespersen, er 20 år, mit cpr er [CPR],
-        telefon: [TELEFON] og email: [EMAIL]"""
+        "Hej, jeg hedder Martin Jespersen, er 20 år, mit cpr er [CPR],"
+        "telefon: [TELEFON] og email: [EMAIL]"
     ]
     CorpusObj = textanonymization.TextAnonymizer(test_corpus)
     masked_corpus = CorpusObj.mask_corpus()

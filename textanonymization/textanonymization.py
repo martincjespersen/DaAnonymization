@@ -19,7 +19,7 @@ class TextAnonymizer(object):
         )
         cprs = re.findall(cpr_pattern, text)
         for cpr in cprs:
-            text.replace(cpr, "[CPR]")
+            text = text.replace(cpr, "[CPR]")
 
         return text
 
@@ -27,17 +27,18 @@ class TextAnonymizer(object):
     def mask_telefon_nr(self, text: str) -> str:
         tlf_pattern = "|".join(
             [
-                r"\+45\d{​8}​",
-                r"\+45\d{​2}​ \d{​2}​ \d{​2}​ \d{​2}​",
-                r"\+45 \d{​8}​",
-                r"\+45 \d{​2}​ \d{​2}​ \d{​2}​ \d{​2}​",
-                r"\d{​8}​",
-                r"\d{​2}​ \d{​2}​ \d{​2}​ \d{​2}​",
+                r"\+\d{10}",
+                r"\+\d{4} \d{2}​ \d{2}​ \d{2}",
+                r"\+\d{2} \d{8}",
+                r"\+\d{2} \d{2}​ \d{2}​ \d{2}​ \d{2}",
+                r"\d{8}",
+                r"\d{2}​ \d{2}​ \d{2}​​ \d{2}",
             ]
         )
         tlf_nrs = re.findall(tlf_pattern, text)
         for tlf_nr in tlf_nrs:
-            text.replace(tlf_nr, "[TELEFON]")
+            print(tlf_nr)
+            text = text.replace(tlf_nr, "[TELEFON]")
 
         return text
 
@@ -46,7 +47,7 @@ class TextAnonymizer(object):
         mail_pattern = r"[\w\.-]+@[\w\.-]+(?:\.[\w]+)+"
         emails = re.findall(mail_pattern, text)
         for email in emails:
-            text.replace(email, "[EMAIL]")
+            text = text.replace(email, "[EMAIL]")
 
         return text
 
@@ -60,8 +61,6 @@ class TextAnonymizer(object):
         }
 
         for method in methods:
-            print(self.corpus)
             self.corpus = list(map(methods[method], self.corpus))
-            print(self.corpus)
 
         return self.corpus

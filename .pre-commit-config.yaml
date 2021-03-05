@@ -29,3 +29,12 @@ repos:
     rev: '3.8.4'
     hooks:
     -   id: flake8
+- repo: local
+  hooks:
+  -   id: tests
+      name: Run pytest unit tests
+      entry: pytest -v
+      language: system
+      types: [python]
+      pass_filenames: false
+      always_run: true
