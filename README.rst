@@ -23,7 +23,7 @@ DaAnonymization - Anonymizations tool for Danish Text
 Python Boilerplate contains all the boilerplate you need to create a Python package.
 
 
-* Free software: MIT license
+* Free software: Apache license Version 2.0
 
 
 Features
