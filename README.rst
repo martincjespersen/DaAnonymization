@@ -1,6 +1,6 @@
-=================
-TextAnonymization
-=================
+===================================================
+DaAnonymization - Danish Textual Anonymization tool
+===================================================
 
 
 .. image:: https://img.shields.io/pypi/v/textanonymization.svg
