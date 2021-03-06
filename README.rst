@@ -30,10 +30,16 @@ Python Boilerplate contains all the boilerplate you need to create a Python pack
 Features
 --------
 
-* Classify CPRs, telephone numbers, emails
+* Regex for  CPRs, telephone numbers, emails
+* DaNLP and DaCy NER transformer models for person, location and orginization
 
 Next up
 --------
+
+* More comprehensive tests on larger corpus'
+* Evaluate performance of the various pipelines on larger (synthetic?) corpus'
+* Test NER models for possible bias with person entities
+
 
 Credits
 -------
