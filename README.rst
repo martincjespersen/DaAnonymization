@@ -42,11 +42,11 @@ https://github.com/KennethEnevoldsen/DaCy
 Features
 --------
 
-* Regex for  CPRs, telephone numbers, emails
-* Integration of custom functions as part of the pipeline
-* Named Entity Models for Danish language implemented (PER, LOC, ORG):
-    * DaCy: https://github.com/KennethEnevoldsen/DaCy
-    * DaNLP: https://github.com/alexandrainst/danlp
+- Regex for  CPRs, telephone numbers, emails
+- Integration of custom functions as part of the pipeline
+- Named Entity Models for Danish language implemented (PER, LOC, ORG):
+    - DaCy: https://github.com/KennethEnevoldsen/DaCy
+    - DaNLP: https://github.com/alexandrainst/danlp
 
 Next up
 --------
