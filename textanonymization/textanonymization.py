@@ -132,6 +132,16 @@ class TextAnonymizer(object):
     """
 
     def _load_NER_model(self, NER_type: str = "danlp") -> None:
+        """
+        Load NER model
+
+        Args:
+            NER_type: Which type to load (danlp or dacy)
+
+        Returns:
+            None
+
+        """
         self.nlp = da_core_news_sm.load()
         if NER_type == "danlp":
             self.ner_model = load_bert_ner_model()
