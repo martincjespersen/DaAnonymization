@@ -1,5 +1,5 @@
 ====================================================
-DaAnonymization - Anonymization tool for Danish Text
+DaAnonymization - Anonymization tool for Danish text
 ====================================================
 
 
@@ -28,11 +28,12 @@ A simple pipeline wrapped around SpaCy, DaNLP and DaCy for anonymizing danish co
 
 Installation
 ------------
-To install, clone the directory and run the following command in the folder of the repository.
+To install from source:
 
 .. code-block:: bash
-
-    pip install setup.py
+    git clone https://github.com/martincjespersen/DaAnonymization.git
+    cd DaAnonymization
+    python setup.py install
 
 
 **Note:**
