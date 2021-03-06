@@ -35,6 +35,12 @@ To install from source:
     cd DaAnonymization
     python setup.py install
 
+A prerequisite for the SpaCy nlp to run, the Danish version has to be installed running the following command:
+
+.. code-block:: bash
+
+    python -m spacy download da_core_news_sm
+
 
 **Note:**
 To enable DaCy as a NER model you need to download the **large model** folder and place it within the root of the repository. Follow the instructions here:

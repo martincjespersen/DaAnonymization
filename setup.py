@@ -20,8 +20,8 @@ requirements = [
     "transformers==3.1.0",
     "spacy-transformers==1.0.1",
     "gensim==3.8.1",
-    "spacy",
-    "joblib",
+    "spacy==3.0.3",
+    "joblib==1.0.1",
 ]
 
 setup_requirements = [
