@@ -19,7 +19,8 @@ requirements = [
     "danlp",
     "gensim==3.8.1",
     "pip==19.2.3",
-    "Click==7.0",
+    "click-7.1.2",
+    "smart-open-3.0.0",
     "pytest==4.6.5",
     "pytest-runner==5.1",
 ]
