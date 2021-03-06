@@ -31,7 +31,9 @@ Features
 --------
 
 * Regex for  CPRs, telephone numbers, emails
-* DaNLP and DaCy NER transformer models for person, location and orginization
+* Named Entity Models for Danish language implemented (PER, LOC, ORG):
+** DaCy: https://github.com/KennethEnevoldsen/DaCy
+** DaNLP: https://github.com/alexandrainst/danlp
 
 Next up
 --------
