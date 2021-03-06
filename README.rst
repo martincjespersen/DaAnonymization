@@ -31,6 +31,7 @@ Installation
 To install from source:
 
 .. code-block:: bash
+
     git clone https://github.com/martincjespersen/DaAnonymization.git
     cd DaAnonymization
     python setup.py install
