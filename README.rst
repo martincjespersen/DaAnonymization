@@ -43,6 +43,7 @@ Features
 --------
 
 * Regex for  CPRs, telephone numbers, emails
+* Integration of custom functions as part of the pipeline
 * Named Entity Models for Danish language implemented (PER, LOC, ORG):
     * DaCy: https://github.com/KennethEnevoldsen/DaCy
     * DaNLP: https://github.com/alexandrainst/danlp
@@ -50,6 +51,7 @@ Features
 Next up
 --------
 
+* Add tests for integration of custom functions
 * More comprehensive tests on larger corpus'
 * Evaluate performance of the various pipelines on larger (synthetic?) corpus'
 * Test NER models for possible bias with person entities
