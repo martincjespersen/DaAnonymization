@@ -28,8 +28,14 @@ A simple pipeline wrapped around SpaCy, DaNLP and DaCy for anonymizing danish co
 
 Installation
 ------------
+To install, clone the directory and run the following command in the folder of the repository:
+```
+pip install setup.py
+```
 
-TODO
+**Note:**
+To enable DaCy as a NER model you need to download the **large model** folder and place it within the root of the repository. Follow the instructions here:
+https://github.com/KennethEnevoldsen/DaCy
 
 Features
 --------
@@ -45,6 +51,7 @@ Next up
 * More comprehensive tests on larger corpus'
 * Evaluate performance of the various pipelines on larger (synthetic?) corpus'
 * Test NER models for possible bias with person entities
+* Make DaCy model path flexible (use environment variable instead of fixed path)
 
 
 Credits
