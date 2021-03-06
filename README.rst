@@ -80,7 +80,6 @@ Quickstart
     # Anonymize person, location, organization, emails, CPR and telephone numbers
     anonymized_corpus = Anonymizer.mask_corpus()
 
-
     for text in anonymized_corpus:
         print(text)
 
