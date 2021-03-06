@@ -113,11 +113,6 @@ class TextAnonymizer(object):
     ########## Mask multiple types of entities ##########
     """
 
-    # extanonymization/textanonymization.py:131: error: No overload variant of "map" matches argument types "function", "List[str]"
-    # textanonymization/textanonymization.py:131: note: Possible overload variant:
-    # textanonymization/textanonymization.py:131: note:     def [_T1, _S] map(Callable[[_T1], _S], Iterable[_T1]) -> Iterator[_S]
-    # textanonymization/textanonymization.py:131: note:     <5 more non-matching overloads not shown>
-    # Found 1 error in 1 file (checked 2 source files)
     def mask_corpus(
         self, masking_methods: List[str] = ["cpr", "telefon", "email", "NER"]
     ) -> List[str]:
