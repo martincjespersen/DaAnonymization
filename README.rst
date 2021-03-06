@@ -30,9 +30,9 @@ Installation
 ------------
 To install, clone the directory and run the following command in the folder of the repository:
 
-```
-pip install setup.py
-```
+.. code-block::
+	pip install setup.py
+
 
 **Note:**
 To enable DaCy as a NER model you need to download the **large model** folder and place it within the root of the repository. Follow the instructions here:
