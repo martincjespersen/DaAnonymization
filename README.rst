@@ -22,9 +22,9 @@ Description
 -----------
 A simple pipeline wrapped around SpaCy, DaNLP and DaCy for anonymizing danish corpora. The pipeline allows for custom functions to be implemented and piped in combination with custom functions.
 
-* Disclaimer: As the pipeline utilizes predictive models and regex function to identify entities, there is no guarantee that all sensitive information have been remove.
-
 * Free software: Apache license Version 2.0
+
+**Disclaimer:** As the pipeline utilizes predictive models and regex function to identify entities, there is no guarantee that all sensitive information have been remove.
 
 Features
 --------
