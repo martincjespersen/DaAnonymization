@@ -87,7 +87,7 @@ class TextAnonymizer(object):
             print(type(self.nlp))
         elif NER_type == "dacy":
             self.ner_model = spacy.load(
-                "dacy_models/da_dacy_large_tft-0.0.0/da_dacy_large_tft/da_dacy_large_tft-0.0.0"
+                "da_dacy_large_tft-0.0.0/da_dacy_large_tft/da_dacy_large_tft-0.0.0"
             )
         else:
             raise Exception("Not implemented: {}".format(NER_type))
