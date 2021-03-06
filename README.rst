@@ -28,9 +28,10 @@ A simple pipeline wrapped around SpaCy, DaNLP and DaCy for anonymizing danish co
 
 Installation
 ------------
-To install, clone the directory and run the following command in the folder of the repository:
+To install, clone the directory and run the following command in the folder of the repository.
 
-.. code-block:: python
+.. code-block:: bash
+
     pip install setup.py
 
 
