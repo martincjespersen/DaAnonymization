@@ -30,8 +30,8 @@ Installation
 ------------
 To install, clone the directory and run the following command in the folder of the repository:
 
-.. code-block::python
-	pip install setup.py
+.. code-block:: python
+    pip install setup.py
 
 
 **Note:**
@@ -43,8 +43,8 @@ Features
 
 * Regex for  CPRs, telephone numbers, emails
 * Named Entity Models for Danish language implemented (PER, LOC, ORG):
-	* DaCy: https://github.com/KennethEnevoldsen/DaCy
-	* DaNLP: https://github.com/alexandrainst/danlp
+    * DaCy: https://github.com/KennethEnevoldsen/DaCy
+    * DaNLP: https://github.com/alexandrainst/danlp
 
 Next up
 --------
