@@ -78,7 +78,7 @@ Quickstart
     Anonymizer._load_NER_model("danlp")
 
     # Anonymize person, location, organization, emails, CPR and telephone numbers
-    anonymized_corpus = Anonymizer.mask_corpus()
+    anonymized_corpus = Anonymizer.mask_corpus(corpus)
 
     for text in anonymized_corpus:
         print(text)
