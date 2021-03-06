@@ -26,6 +26,15 @@ A simple pipeline wrapped around SpaCy, DaNLP and DaCy for anonymizing danish co
 
 * Free software: Apache license Version 2.0
 
+Features
+--------
+
+- Regex for  CPRs, telephone numbers, emails
+- Integration of custom functions as part of the pipeline
+- Named Entity Models for Danish language implemented (PER, LOC, ORG):
+    - DaCy: https://github.com/KennethEnevoldsen/DaCy
+    - DaNLP: https://github.com/alexandrainst/danlp
+
 Installation
 ------------
 To install from source:
@@ -47,14 +56,40 @@ A prerequisite for the SpaCy nlp to run, the Danish version has to be installed 
 To enable DaCy as a NER model you need to download the **large model** folder and place it within the root of the repository. Follow the instructions here:
 https://github.com/KennethEnevoldsen/DaCy
 
-Features
---------
 
-- Regex for  CPRs, telephone numbers, emails
-- Integration of custom functions as part of the pipeline
-- Named Entity Models for Danish language implemented (PER, LOC, ORG):
-    - DaCy: https://github.com/KennethEnevoldsen/DaCy
-    - DaNLP: https://github.com/alexandrainst/danlp
+Quickstart
+----------
+
+
+.. code-block:: python
+
+    from textanonymization import textanonymization
+
+    # list of texts
+    corpus = [
+        "Hej, jeg hedder Martin Jespersen og er fra Danmark og arbejder i "
+        "Deloitte, mit cpr er 010203-2010, telefon: +4545454545 "
+        "og email: martin.martin@gmail.com",
+    ]
+
+    Anonymizer = textanonymization.TextAnonymizer(corpus)
+
+    # load danlp as NER model
+    Anonymizer._load_NER_model("danlp")
+
+    # Anonymize person, location, organization, emails, CPR and telephone numbers
+    anonymized_corpus = Anonymizer.mask_corpus()
+
+
+    for text in anonymized_corpus:
+        print(text)
+
+
+Running this script outputs the following:
+
+.. code-block:: console
+
+    Hej, jeg hedder [PERSON] og er fra [LOKATION] og arbejder i [ORGANISATION], mit cpr er [CPR], telefon: [TELEFON] og email: [EMAIL]
 
 Next up
 --------
