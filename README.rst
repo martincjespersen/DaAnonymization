@@ -32,8 +32,8 @@ Features
 
 * Regex for  CPRs, telephone numbers, emails
 * Named Entity Models for Danish language implemented (PER, LOC, ORG):
-** DaCy: https://github.com/KennethEnevoldsen/DaCy
-** DaNLP: https://github.com/alexandrainst/danlp
+	* DaCy: https://github.com/KennethEnevoldsen/DaCy
+	* DaNLP: https://github.com/alexandrainst/danlp
 
 Next up
 --------
