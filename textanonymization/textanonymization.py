@@ -24,6 +24,7 @@ class TextAnonymizer(object):
         self.entities: Dict[Union[str, int], Union[str, int]] = dict()
         self.ner_model: nn.Module
         self.nlp: Callable
+        self.ner_type: str = ""
 
     @staticmethod
     def mask_cpr(text: str) -> str:
@@ -69,10 +70,12 @@ class TextAnonymizer(object):
             "LOC": "LOKATION",
             "ORG": "ORGANISATION",
         }
-        self._run_bert(text, max_len)
+
+        self._run_NER(text, max_len)
 
         for entity_text, entity in self.entities.items():
-            text = text.replace(str(entity_text), "[{}]".format(mapping[entity]))
+            if entity in mapping:
+                text = text.replace(str(entity_text), "[{}]".format(mapping[entity]))
         return text
 
     """
@@ -80,15 +83,16 @@ class TextAnonymizer(object):
     """
 
     def _load_NER_model(self, NER_type: str = "danlp") -> None:
-
+        self.nlp = da_core_news_sm.load()
         if NER_type == "danlp":
             self.ner_model = load_bert_ner_model()
-            self.nlp = da_core_news_sm.load()
+            self.ner_type = "danlp"
             print(type(self.nlp))
         elif NER_type == "dacy":
             self.ner_model = spacy.load(
                 "da_dacy_large_tft-0.0.0/da_dacy_large_tft/da_dacy_large_tft-0.0.0"
             )
+            self.ner_type = "dacy"
         else:
             raise Exception("Not implemented: {}".format(NER_type))
 
@@ -97,7 +101,7 @@ class TextAnonymizer(object):
         for entity in entity_labels["entities"]:
             self.entities[entity["text"]] = entity["type"]
 
-    def _run_bert(self, text: str, max_len: int) -> None:
+    def _run_NER(self, text: str, max_len: int) -> None:
         # Avoid using too much memory (and bert has maximum tokens of 512)
         sentence = self.nlp(text)
         sentence_chunks = [
@@ -105,9 +109,17 @@ class TextAnonymizer(object):
             for x in range(0, len(list(sentence)), max_len)
         ]
         for chunk in sentence_chunks:
-            e_lab = self.ner_model.predict([x.text for x in chunk], IOBformat=False)
-
-            self._update_entities(e_lab)
+            if self.ner_type == "danlp":
+                e_lab = self.ner_model.predict([x.text for x in chunk], IOBformat=False)
+                self._update_entities(e_lab)
+            elif self.ner_type == "dacy":
+                doc = self.ner_model(" ".join([x.text for x in chunk]))
+                chunk_e_lab: Dict[Union[str, int], Union[str, int]] = {
+                    ent.text: ent.label_ for ent in doc.ents
+                }
+                self.entities.update(chunk_e_lab)
+            else:
+                raise Exception("Not implemented: {}".format(self.ner_type))
 
     """
     ########## Mask multiple types of entities ##########
