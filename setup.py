@@ -16,11 +16,12 @@ requirements = [
     "pytest==4.6.5",
     "pytest-runner==5.1",
     "torch==1.8.0",
+    "danlp",
     "transformers==3.1.0",
-    "spacy==3.0.3",
     "spacy-transformers==1.0.1",
     "gensim==3.8.1",
-    "danlp",
+    "spacy",
+    "joblib",
 ]
 
 setup_requirements = [
