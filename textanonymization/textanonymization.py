@@ -15,7 +15,13 @@ class BERT_output(TypedDict):
 
 
 class TextAnonymizer(object):
-    """docstring for TextAnonymizer"""
+    """
+    Object of a text corpus to apply masking function for anonymization
+
+    Args:
+        corpus: The corpus containing a list of strings
+        context_specific: Boolean to determine if entities should be context specific or not
+    """
 
     def __init__(self, corpus: List[str], context_specific: bool = False):
         super(TextAnonymizer, self).__init__()
@@ -26,8 +32,21 @@ class TextAnonymizer(object):
         self.nlp: Callable
         self.ner_type: str = ""
 
+        if self.context_specific:
+            raise Exception("Context specific anonymization is not implemented yet ")
+
     @staticmethod
     def mask_cpr(text: str) -> str:
+        """
+        Masks CPR numbers from a text
+
+        Args:
+            text: Text to remove CPR numbers from
+
+        Returns:
+            Text with [CPR] instead of the CPR numbers
+
+        """
         cpr_pattern = "|".join(
             [r"[0-3]\d{1}[0-1]\d{3}-\d{4}", r"[0-3]\d{1}[0-1]\d{3} \d{4}"]
         )
@@ -39,6 +58,16 @@ class TextAnonymizer(object):
 
     @staticmethod
     def mask_telefon_nr(text: str) -> str:
+        """
+        Masks telephone numbers from a text
+
+        Args:
+            text: Text to remove telephone numbers from
+
+        Returns:
+            Text with [TELEFON] instead of the telephone numbers
+
+        """
         tlf_pattern = "|".join(
             [
                 r"\+\d{10}",
@@ -57,6 +86,16 @@ class TextAnonymizer(object):
 
     @staticmethod
     def mask_email(text: str) -> str:
+        """
+        Masks emails from a text
+
+        Args:
+            text: Text to remove emails from
+
+        Returns:
+            Text with [EMAIL] instead of the email adress
+
+        """
         mail_pattern = r"[\w\.-]+@[\w\.-]+(?:\.[\w]+)+"
         emails = re.findall(mail_pattern, text)
         for email in emails:
@@ -65,6 +104,16 @@ class TextAnonymizer(object):
         return text
 
     def mask_NER(self, text: str, max_len: int = 250) -> str:
+        """
+        Masks named entities (person, location and organization) from a text
+
+        Args:
+            text: Text to remove entities from
+
+        Returns:
+            Text with entity specific token (e.g., person = [PER]) instead of the entity
+
+        """
         mapping: Dict[Union[str, int], str] = {
             "PER": "PERSON",
             "LOC": "LOKATION",
@@ -97,12 +146,31 @@ class TextAnonymizer(object):
             raise Exception("Not implemented: {}".format(NER_type))
 
     def _update_entities(self, entity_labels: BERT_output) -> None:
+        """
+        Update current entities with new predicted entities
 
+        Args:
+            entity_labels: DaNLP's bert output for predicted entities
+
+        Returns:
+            None
+
+        """
         for entity in entity_labels["entities"]:
             self.entities[entity["text"]] = entity["type"]
 
     def _run_NER(self, text: str, max_len: int) -> None:
-        # Avoid using too much memory (and bert has maximum tokens of 512)
+        """
+        Runs NER model on a text entry
+
+        Args:
+            text: Text to predict named entities on
+            max_len: Maximum tokens to include in prediction to fit BERT and memory issues
+
+        Returns:
+            None
+
+        """
         sentence = self.nlp(text)
         sentence_chunks = [
             list(sentence)[x : x + max_len]
@@ -126,14 +194,30 @@ class TextAnonymizer(object):
     """
 
     def mask_corpus(
-        self, masking_methods: List[str] = ["cpr", "telefon", "email", "NER"]
+        self,
+        masking_methods: List[str] = ["cpr", "telefon", "email", "NER"],
+        custom_functions: Dict[str, Callable] = {},
     ) -> List[str]:
+        """
+        Mask a corpus of danish text with provided methods
+
+        Args:
+            masking_methods: Directed list of masking methods to apply to the corpus
+            custom_functions: Dictionary containing custom masking functions as values and their names as keys
+
+        Returns:
+            Anonymized version of the corpus
+
+        """
+
         methods = {
             "cpr": self.mask_cpr,
             "telefon": self.mask_telefon_nr,
             "email": self.mask_email,
             "NER": self.mask_NER,
         }
+
+        methods.update(custom_functions)
 
         for method in masking_methods:
             self.corpus = list(map(methods[method], self.corpus))  # type: ignore
