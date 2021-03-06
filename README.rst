@@ -30,7 +30,7 @@ Installation
 ------------
 To install, clone the directory and run the following command in the folder of the repository:
 
-::
+.. code-block::
 	pip install setup.py
 
 
