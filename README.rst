@@ -59,7 +59,7 @@ https://github.com/KennethEnevoldsen/DaCy
 
 Quickstart
 ----------
-
+DaAnonymization's main component **TextAnonymizer** uses its ``mask_corpus`` to anonymize text by removing person, location, organization, email, telephone number and CPR. The order of these masking methods are by default CPR, telephone number, email and NER (PER,LOC,ORG) as NER will identify names in the emails.
 
 .. code-block:: python
 
