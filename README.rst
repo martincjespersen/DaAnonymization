@@ -1,9 +1,7 @@
+====================================================
 .. figure:: docs/imgs/header.png
     :width: 200px
     :align: center
-
-====================================================
-DaAnonymization - Anonymization tool for Danish text
 ====================================================
 
 
