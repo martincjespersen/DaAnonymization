@@ -129,8 +129,8 @@ As projects are very different on needs, DaAnonymization supports adding custom 
 
 .. code-block:: console
 
-    Hej, jeg hedder [PERSON], er [ALDER], er fra [LOKATION] og arbejder i [ORGANISATION], mit cpr er [CPR],
-    telefon: [TELEFON] og email: [EMAIL]
+    Hej, jeg hedder [PERSON], er [ALDER], er fra [LOKATION] og arbejder i [ORGANISATION],
+    mit cpr er [CPR], telefon: [TELEFON] og email: [EMAIL]
 
 Next up
 --------
