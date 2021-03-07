@@ -139,7 +139,8 @@ Next up
 * Evaluate performance of the various pipelines on larger (synthetic?) corpus'
 * Test NER models for possible bias with person entities
 * Make DaCy model path flexible (use environment variable instead of fixed path)
-
+* Optimize predicting with DaCy using larger batches of text instead of single texts (nlp.pipe)
+* Optimize predicting with DaNLP creating a modified prediction function
 
 Credits
 -------
