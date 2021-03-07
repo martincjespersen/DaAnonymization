@@ -91,6 +91,47 @@ Running this script outputs the following:
     Hej, jeg hedder [PERSON] og er fra [LOKATION] og arbejder i [ORGANISATION], mit cpr er [CPR],
     telefon: [TELEFON] og email: [EMAIL]
 
+Using custom masking functions
+------------------------------
+As projects are very different on needs, DaAnonymization supports adding custom functions for masking additional features which are not implemented by default.
+
+.. code-block:: python
+
+    from textanonymization import textanonymization
+
+    # Takes string as input and returns a masked version of the string
+    example_custom_function = lambda x: x.replace('20 år', '[ALDER]')
+
+    # list of texts
+    corpus = [
+        "Hej, jeg hedder Martin Jespersen, er 20 år, er fra Danmark og arbejder i "
+        "Deloitte, mit cpr er 010203-2010, telefon: +4545454545 "
+        "og email: martin.martin@gmail.com",
+    ]
+
+    Anonymizer = textanonymization.TextAnonymizer(corpus)
+
+    # load danlp as NER model
+    Anonymizer._load_NER_model("danlp")
+
+    # Anonymize person, location, organization, emails, CPR and telephone numbers
+    anonymized_corpus = Anonymizer.mask_corpus()
+
+    # add the name to masking_methods in the desired order
+    # add custom function to custom_functions to update pool of possible masking functions
+    anonymized_corpus = Anonymizer.mask_corpus(
+        masking_methods=["cpr", "telefon", "email", "NER", "alder"],
+        custom_functions={"alder": example_custom_function},
+    )
+
+    for text in anonymized_corpus:
+        print(text)
+
+.. code-block:: console
+
+    Hej, jeg hedder [PERSON], er [ALDER], er fra [LOKATION] og arbejder i [ORGANISATION], mit cpr er [CPR],
+    telefon: [TELEFON] og email: [EMAIL]
+
 Next up
 --------
 
