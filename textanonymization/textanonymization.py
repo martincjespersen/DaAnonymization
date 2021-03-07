@@ -197,19 +197,22 @@ class TextAnonymizer(object):
             if self.ner_type == "danlp":
                 e_lab = self.ner_model.predict([x.text for x in chunk], IOBformat=False)
                 self._update_entities(entities, e_lab)
-            elif self.ner_type == "dacy":
-                doc = self.ner_model(" ".join([x.text for x in chunk]))
-                chunk_e_lab: Dict[Union[str, int], Union[str, int]] = {
-                    ent.text: ent.label_ for ent in doc.ents
-                }
-                entities.update(chunk_e_lab)
             else:
                 raise Exception("Not implemented: {}".format(self.ner_type))
 
         return entities
 
-    def _batch_prediction_DaCy(self, batch_size: int):
+    def _batch_prediction_DaCy(self, batch_size: int) -> None:
+        """
+        Runs DaCy NER model on full corpus in batch mode and masks entities
 
+        Args:
+            batch_size: Number of texts to include in a batch
+
+        Returns:
+            None
+
+        """
         assert self.ner_type == "dacy", "DaCy NER model not set"
 
         docs = self.ner_model.pipe(self.corpus, batch_size=batch_size)
@@ -236,6 +239,7 @@ class TextAnonymizer(object):
         Args:
             masking_methods: Directed list of masking methods to apply to the corpus
             custom_functions: Dictionary containing custom masking functions as values and their names as keys
+            batch_size: Used for DaCy running in batch mode
 
         Returns:
             Anonymized version of the corpus

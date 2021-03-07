@@ -37,6 +37,7 @@ Features
 - Named Entity Models for Danish language implemented (PER, LOC, ORG):
     - DaCy: https://github.com/KennethEnevoldsen/DaCy
     - DaNLP: https://github.com/alexandrainst/danlp
+- Batch mode for DaCy, **highly recommended** if predicting a lot of documents
 
 Installation
 ------------
@@ -135,11 +136,10 @@ As each project can have specific needs, DaAnonymization supports adding custom 
 Next up
 --------
 
+* Add test on >512 tokens sentence
 * More comprehensive tests on larger corpus'
-* Evaluate performance of the various pipelines on larger (synthetic?) corpus'
 * Test NER models for possible bias with person entities
 * Make DaCy model path flexible (use environment variable instead of fixed path)
-* Optimize predicting with DaCy using larger batches of text instead of single texts (nlp.pipe)
 * Optimize predicting with DaNLP creating a modified prediction function
 
 Credits

@@ -76,7 +76,7 @@ def test_corpus_mask(response):
         "og email: [EMAIL]. [PERSON] er en 20 årig mand.",
     ]
     CorpusObj = textanonymization.TextAnonymizer(test_corpus)
-    CorpusObj._load_NER_model("dacy")
+    CorpusObj._load_NER_model("danlp")
     masked_corpus = CorpusObj.mask_corpus()
 
     assert masked_corpus == test_output, "{}\nvs.\n{}".format(
@@ -125,6 +125,32 @@ def test_custom_mask(response):
         masking_methods=["cpr", "telefon", "email", "NER", "alder"],
         custom_functions={"alder": custom_mask_age},
     )
+
+    assert masked_corpus == test_output, "{}\nvs.\n{}".format(
+        masked_corpus[0], test_output[0]
+    )
+
+
+def test_dacy_NER(response):
+    """Tests all masks on pre-defined corpus"""
+
+    test_corpus = [
+        "Hej, jeg hedder Martin Jespersen, er 20 år, mit cpr er 010203-2010,"
+        "telefon: +4545454545 og email: martin.martin@gmail.com",
+        "Hej, jeg hedder Martin Jespersen og er fra Danmark og arbejder i "
+        "Deloitte, mit cpr er 010203-2010, telefon: +4545454545 "
+        "og email: martin.martin@gmail.com. Martin er en 20 årig mand.",
+    ]
+    test_output = [
+        "Hej, jeg hedder [PERSON], er 20 år, mit cpr er [CPR],"
+        "telefon: [TELEFON] og email: [EMAIL]",
+        "Hej, jeg hedder [PERSON] og er fra [LOKATION] og arbejder i "
+        "[ORGANISATION], mit cpr er [CPR], telefon: [TELEFON] "
+        "og email: [EMAIL]. [PERSON] er en 20 årig mand.",
+    ]
+    CorpusObj = textanonymization.TextAnonymizer(test_corpus)
+    CorpusObj._load_NER_model("dacy")
+    masked_corpus = CorpusObj.mask_corpus()
 
     assert masked_corpus == test_output, "{}\nvs.\n{}".format(
         masked_corpus[0], test_output[0]
