@@ -76,7 +76,7 @@ def test_corpus_mask(response):
         "og email: [EMAIL]. [PERSON] er en 20 årig mand.",
     ]
     CorpusObj = textanonymization.TextAnonymizer(test_corpus)
-    CorpusObj._load_NER_model("danlp")
+    CorpusObj._load_NER_model("dacy")
     masked_corpus = CorpusObj.mask_corpus()
 
     assert masked_corpus == test_output, "{}\nvs.\n{}".format(

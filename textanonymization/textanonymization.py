@@ -27,10 +27,14 @@ class TextAnonymizer(object):
         super(TextAnonymizer, self).__init__()
         self.corpus = corpus
         self.context_specific = context_specific
-        self.entities: Dict[Union[str, int], Union[str, int]] = dict()
         self.ner_model: nn.Module
         self.nlp: Callable
         self.ner_type: str = ""
+        self.mapping: Dict[Union[str, int], str] = {
+            "PER": "PERSON",
+            "LOC": "LOKATION",
+            "ORG": "ORGANISATION",
+        }
 
         if self.context_specific:
             raise Exception("Context specific anonymization is not implemented yet ")
@@ -114,17 +118,13 @@ class TextAnonymizer(object):
             Text with entity specific token (e.g., person = [PER]) instead of the entity
 
         """
-        mapping: Dict[Union[str, int], str] = {
-            "PER": "PERSON",
-            "LOC": "LOKATION",
-            "ORG": "ORGANISATION",
-        }
+        entities = self._run_NER(text, max_len)
 
-        self._run_NER(text, max_len)
-
-        for entity_text, entity in self.entities.items():
-            if entity in mapping:
-                text = text.replace(str(entity_text), "[{}]".format(mapping[entity]))
+        for entity_text, entity in entities.items():
+            if entity in self.mapping:
+                text = text.replace(
+                    str(entity_text), "[{}]".format(self.mapping[entity])
+                )
         return text
 
     """
@@ -155,7 +155,11 @@ class TextAnonymizer(object):
         else:
             raise Exception("Not implemented: {}".format(NER_type))
 
-    def _update_entities(self, entity_labels: BERT_output) -> None:
+    def _update_entities(
+        self,
+        entities: Dict[Union[str, int], Union[str, int]],
+        entity_labels: BERT_output,
+    ) -> None:
         """
         Update current entities with new predicted entities
 
@@ -167,9 +171,11 @@ class TextAnonymizer(object):
 
         """
         for entity in entity_labels["entities"]:
-            self.entities[entity["text"]] = entity["type"]
+            entities[entity["text"]] = entity["type"]
 
-    def _run_NER(self, text: str, max_len: int) -> None:
+    def _run_NER(
+        self, text: str, max_len: int
+    ) -> Dict[Union[str, int], Union[str, int]]:
         """
         Runs NER model on a text entry
 
@@ -181,6 +187,7 @@ class TextAnonymizer(object):
             None
 
         """
+        entities: Dict[Union[str, int], Union[str, int]] = dict()
         sentence = self.nlp(text)
         sentence_chunks = [
             list(sentence)[x : x + max_len]
@@ -189,15 +196,29 @@ class TextAnonymizer(object):
         for chunk in sentence_chunks:
             if self.ner_type == "danlp":
                 e_lab = self.ner_model.predict([x.text for x in chunk], IOBformat=False)
-                self._update_entities(e_lab)
+                self._update_entities(entities, e_lab)
             elif self.ner_type == "dacy":
                 doc = self.ner_model(" ".join([x.text for x in chunk]))
                 chunk_e_lab: Dict[Union[str, int], Union[str, int]] = {
                     ent.text: ent.label_ for ent in doc.ents
                 }
-                self.entities.update(chunk_e_lab)
+                entities.update(chunk_e_lab)
             else:
                 raise Exception("Not implemented: {}".format(self.ner_type))
+
+        return entities
+
+    def _batch_prediction_DaCy(self, batch_size: int):
+
+        assert self.ner_type == "dacy", "DaCy NER model not set"
+
+        docs = self.ner_model.pipe(self.corpus, batch_size=batch_size)
+        for i, doc in enumerate(docs):
+            for ent in doc.ents:
+                if ent.label_ in self.mapping:
+                    self.corpus[i] = self.corpus[i].replace(
+                        ent.text, "[{}]".format(self.mapping[ent.label_])
+                    )
 
     """
     ########## Mask multiple types of entities ##########
@@ -207,6 +228,7 @@ class TextAnonymizer(object):
         self,
         masking_methods: List[str] = ["cpr", "telefon", "email", "NER"],
         custom_functions: Dict[str, Callable] = {},
+        batch_size: int = 8,
     ) -> List[str]:
         """
         Mask a corpus of danish text with provided methods
@@ -230,6 +252,11 @@ class TextAnonymizer(object):
         methods.update(custom_functions)
 
         for method in masking_methods:
+            if method == "NER" and self.ner_type == "dacy":
+                continue
             self.corpus = list(map(methods[method], self.corpus))  # type: ignore
+
+        if self.ner_type == "dacy":
+            self._batch_prediction_DaCy(batch_size)
 
         return self.corpus
