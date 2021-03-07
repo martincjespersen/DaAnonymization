@@ -117,9 +117,6 @@ As projects are very different on needs, DaAnonymization supports adding custom 
     # load danlp as NER model
     Anonymizer._load_NER_model("danlp")
 
-    # Anonymize person, location, organization, emails, CPR and telephone numbers
-    anonymized_corpus = Anonymizer.mask_corpus()
-
     # add the name to masking_methods in the desired order
     # add custom function to custom_functions to update pool of possible masking functions
     anonymized_corpus = Anonymizer.mask_corpus(
