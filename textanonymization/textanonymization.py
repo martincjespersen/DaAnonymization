@@ -125,9 +125,6 @@ class TextAnonymizer(object):
         for entity_text, entity in self.entities.items():
             if entity in mapping:
                 text = text.replace(str(entity_text), "[{}]".format(mapping[entity]))
-                sub_words = str(entity_text).split(" ")
-                for sub_word in sub_words:
-                    text = text.replace(sub_word, "[{}]".format(mapping[entity]))
         return text
 
     """
