@@ -66,14 +66,14 @@ def test_corpus_mask(response):
         "telefon: +4545454545 og email: martin.martin@gmail.com",
         "Hej, jeg hedder Martin Jespersen og er fra Danmark og arbejder i "
         "Deloitte, mit cpr er 010203-2010, telefon: +4545454545 "
-        "og email: martin.martin@gmail.com",
+        "og email: martin.martin@gmail.com. Martin er en 20 årig mand.",
     ]
     test_output = [
         "Hej, jeg hedder [PERSON], er 20 år, mit cpr er [CPR],"
         "telefon: [TELEFON] og email: [EMAIL]",
         "Hej, jeg hedder [PERSON] og er fra [LOKATION] og arbejder i "
         "[ORGANISATION], mit cpr er [CPR], telefon: [TELEFON] "
-        "og email: [EMAIL]",
+        "og email: [EMAIL]. [PERSON] er en 20 årig mand.",
     ]
     CorpusObj = textanonymization.TextAnonymizer(test_corpus)
     CorpusObj._load_NER_model("danlp")
