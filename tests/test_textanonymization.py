@@ -87,36 +87,34 @@ def test_corpus_mask(response):
 def test_custom_mask(response):
     """Tests adding a custom function to all masks on a pre-defined corpus"""
 
-    def custom_mask_numbers(text: str) -> str:
+    def custom_mask_age(text: str) -> str:
         """
-        Masks  numbers from a text
+        Masks age from a text
 
         Args:
-            text: Text to remove numbers from
+            text: Text to remove age from
 
         Returns:
-            Text with [NUMMER] instead of the numbers
+            Text with [ALDER] instead of the numbers
 
         """
-        number_pattern = r"(\d+[\.,]?\d{1,3}[\.,]?\d{1,3})"
+        number_pattern = r"\d+ år"
         numbers = re.findall(number_pattern, text)
         for number in numbers:
-            text = text.replace(number, "[NUMMER]")
+            text = text.replace(number, "[ALDER]")
 
         return text
 
     test_corpus = [
         "Hej, jeg hedder Martin Jespersen, er 20 år, mit cpr er 010203-2010,"
-        "telefon: +4545454545 og email: martin.martin@gmail.com. "
-        "Min saldo er 20,100.53",
+        "telefon: +4545454545 og email: martin.martin@gmail.com.",
         "Hej, jeg hedder Martin Jespersen og er fra Danmark og arbejder i "
         "Deloitte, mit cpr er 010203-2010, telefon: +4545454545 "
         "og email: martin.martin@gmail.com",
     ]
     test_output = [
-        "Hej, jeg hedder [PERSON], er 20 år, mit cpr er [CPR],"
-        "telefon: [TELEFON] og email: [EMAIL]. "
-        "Min saldo er [SALDO]",
+        "Hej, jeg hedder [PERSON], er [ALDER], mit cpr er [CPR],"
+        "telefon: [TELEFON] og email: [EMAIL].",
         "Hej, jeg hedder [PERSON] og er fra [LOKATION] og arbejder i "
         "[ORGANISATION], mit cpr er [CPR], telefon: [TELEFON] "
         "og email: [EMAIL]",
@@ -124,8 +122,8 @@ def test_custom_mask(response):
     CorpusObj = textanonymization.TextAnonymizer(test_corpus)
     CorpusObj._load_NER_model("danlp")
     masked_corpus = CorpusObj.mask_corpus(
-        masking_methods=["cpr", "telefon", "email", "NER", "nummer"],
-        custom_functions={"nummer": lambda x: x.replace("20,100.53", "[SALDO]")},
+        masking_methods=["cpr", "telefon", "email", "NER", "alder"],
+        custom_functions={"alder": custom_mask_age},
     )
 
     assert masked_corpus == test_output, "{}\nvs.\n{}".format(
