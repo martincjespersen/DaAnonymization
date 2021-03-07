@@ -96,7 +96,7 @@ Running this script outputs the following:
 
 Using custom masking functions
 ------------------------------
-As projects are very different on needs, DaAnonymization supports adding custom functions for masking additional features which are not implemented by default.
+As each project can have specific needs, DaAnonymization supports adding custom functions to the pipeline for masking additional features which are not implemented by default.
 
 .. code-block:: python
 
