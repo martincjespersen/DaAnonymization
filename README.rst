@@ -1,9 +1,10 @@
-====================================================
 .. figure:: docs/imgs/header.png
-    :width: 200px
+    :width: 150px
     :align: center
-====================================================
 
+==================================
+Anonymization tool for Danish text
+==================================
 
 .. image:: https://img.shields.io/pypi/v/textanonymization.svg
         :target: https://pypi.python.org/pypi/textanonymization
