@@ -9,6 +9,8 @@ from click.testing import CliRunner
 from textanonymization import textanonymization
 from textanonymization import cli
 
+import re
+
 
 @pytest.fixture
 def response():
@@ -57,7 +59,7 @@ def test_email_mask(response):
 
 
 def test_corpus_mask(response):
-    """Tests all masks on pre-defined text"""
+    """Tests all masks on pre-defined corpus"""
 
     test_corpus = [
         "Hej, jeg hedder Martin Jespersen, er 20 år, mit cpr er 010203-2010,"
@@ -76,6 +78,55 @@ def test_corpus_mask(response):
     CorpusObj = textanonymization.TextAnonymizer(test_corpus)
     CorpusObj._load_NER_model("danlp")
     masked_corpus = CorpusObj.mask_corpus()
+
+    assert masked_corpus == test_output, "{}\nvs.\n{}".format(
+        masked_corpus[0], test_output[0]
+    )
+
+
+def test_custom_mask(response):
+    """Tests adding a custom function to all masks on a pre-defined corpus"""
+
+    def custom_mask_numbers(text: str) -> str:
+        """
+        Masks  numbers from a text
+
+        Args:
+            text: Text to remove numbers from
+
+        Returns:
+            Text with [NUMMER] instead of the numbers
+
+        """
+        number_pattern = r"(\d+[\.,]?\d{1,3}[\.,]?\d{1,3})"
+        numbers = re.findall(number_pattern, text)
+        for number in numbers:
+            text = text.replace(number, "[NUMMER]")
+
+        return text
+
+    test_corpus = [
+        "Hej, jeg hedder Martin Jespersen, er 20 år, mit cpr er 010203-2010,"
+        "telefon: +4545454545 og email: martin.martin@gmail.com. "
+        "Min saldo er 20,100.53",
+        "Hej, jeg hedder Martin Jespersen og er fra Danmark og arbejder i "
+        "Deloitte, mit cpr er 010203-2010, telefon: +4545454545 "
+        "og email: martin.martin@gmail.com",
+    ]
+    test_output = [
+        "Hej, jeg hedder [PERSON], er 20 år, mit cpr er [CPR],"
+        "telefon: [TELEFON] og email: [EMAIL]. "
+        "Min saldo er [SALDO]",
+        "Hej, jeg hedder [PERSON] og er fra [LOKATION] og arbejder i "
+        "[ORGANISATION], mit cpr er [CPR], telefon: [TELEFON] "
+        "og email: [EMAIL]",
+    ]
+    CorpusObj = textanonymization.TextAnonymizer(test_corpus)
+    CorpusObj._load_NER_model("danlp")
+    masked_corpus = CorpusObj.mask_corpus(
+        masking_methods=["cpr", "telefon", "email", "NER", "nummer"],
+        custom_functions={"nummer": lambda x: x.replace("20,100.53", "[SALDO]")},
+    )
 
     assert masked_corpus == test_output, "{}\nvs.\n{}".format(
         masked_corpus[0], test_output[0]

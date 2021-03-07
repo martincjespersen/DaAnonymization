@@ -94,7 +94,6 @@ Running this script outputs the following:
 Next up
 --------
 
-* Add tests for integration of custom functions
 * More comprehensive tests on larger corpus'
 * Evaluate performance of the various pipelines on larger (synthetic?) corpus'
 * Test NER models for possible bias with person entities
