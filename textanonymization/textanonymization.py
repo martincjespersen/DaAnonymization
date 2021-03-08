@@ -1,6 +1,6 @@
 """Main module."""
 
-from typing import List, Dict, Union, TypedDict, Callable
+from typing import List, Dict, Union, TypedDict, Callable, Optional
 import os
 
 from danlp.models import load_bert_ner_model
@@ -33,16 +33,18 @@ class TextAnonymizer(object):
         self.nlp: Callable
         self.ner_type: str = ""
         self.mapping: Dict[Union[str, int], str] = {
-            "PER": "PERSON",
-            "LOC": "LOKATION",
-            "ORG": "ORGANISATION",
+            "PER": "[PERSON]",
+            "LOC": "[LOKATION]",
+            "ORG": "[ORGANISATION]",
+            "CPR": "[CPR]",
+            "TEL": "[TELEFON]",
+            "MAIL": "[EMAIL]",
         }
 
         if self.mask_misc:
             self.mapping.update({"MISC": "DIVERSE"})
 
-    @staticmethod
-    def mask_cpr(text: str) -> str:
+    def mask_cpr(self, text: str) -> str:
         """
         Masks CPR numbers from a text
 
@@ -56,14 +58,13 @@ class TextAnonymizer(object):
         cpr_pattern = "|".join(
             [r"[0-3]\d{1}[0-1]\d{3}-\d{4}", r"[0-3]\d{1}[0-1]\d{3} \d{4}"]
         )
-        cprs = re.findall(cpr_pattern, text)
+        cprs = set(re.findall(cpr_pattern, text))
         for cpr in cprs:
-            text = text.replace(cpr, "[CPR]")
+            text = text.replace(cpr, self.mapping["CPR"])
 
         return text
 
-    @staticmethod
-    def mask_telefon_nr(text: str) -> str:
+    def mask_telefon_nr(self, text: str) -> str:
         """
         Masks telephone numbers from a text
 
@@ -84,14 +85,13 @@ class TextAnonymizer(object):
                 r"\d{2}​ \d{2}​ \d{2}​​ \d{2}",
             ]
         )
-        tlf_nrs = re.findall(tlf_pattern, text)
+        tlf_nrs = set(re.findall(tlf_pattern, text))
         for tlf_nr in tlf_nrs:
-            text = text.replace(tlf_nr, "[TELEFON]")
+            text = text.replace(tlf_nr, self.mapping["TEL"])
 
         return text
 
-    @staticmethod
-    def mask_email(text: str) -> str:
+    def mask_email(self, text: str) -> str:
         """
         Masks emails from a text
 
@@ -103,9 +103,9 @@ class TextAnonymizer(object):
 
         """
         mail_pattern = r"[\w\.-]+@[\w\.-]+(?:\.[\w]+)+"
-        emails = re.findall(mail_pattern, text)
+        emails = set(re.findall(mail_pattern, text))
         for email in emails:
-            text = text.replace(email, "[EMAIL]")
+            text = text.replace(email, self.mapping["MAIL"])
 
         return text
 
@@ -124,9 +124,7 @@ class TextAnonymizer(object):
 
         for entity_text, entity in entities.items():
             if entity in self.mapping:
-                text = text.replace(
-                    str(entity_text), "[{}]".format(self.mapping[entity])
-                )
+                text = text.replace(str(entity_text), self.mapping[entity])
         return text
 
     """
@@ -224,7 +222,7 @@ class TextAnonymizer(object):
             for ent in doc.ents:
                 if ent.label_ in self.mapping:
                     self.corpus[i] = self.corpus[i].replace(
-                        ent.text, "[{}]".format(self.mapping[ent.label_])
+                        ent.text, "{}".format(self.mapping[ent.label_])
                     )
 
     """
