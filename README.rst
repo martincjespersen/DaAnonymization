@@ -142,6 +142,7 @@ Next up
 * Optimize predicting with DaNLP creating a modified prediction function
 * Implement pseudonymization module (Person 1, Person 2 etc.)
 * Implement customizable replacement masks
+* Potentially implement multiprocessing pool.map for faster regex functions on larger corpora
 
 Credits
 -------
