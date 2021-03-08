@@ -138,6 +138,7 @@ Next up
 --------
 
 * Add test on >512 tokens sentence
+* Fix parallel problem of DaCy
 * More comprehensive tests on larger corpus'
 * Test NER models for possible bias with person entities
 * Optimize predicting with DaNLP creating a modified prediction function

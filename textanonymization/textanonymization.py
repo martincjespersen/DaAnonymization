@@ -2,6 +2,7 @@
 
 from typing import List, Dict, Union, TypedDict, Callable, Optional
 import os
+from tqdm import tqdm
 
 from danlp.models import load_bert_ner_model
 import re
@@ -218,7 +219,7 @@ class TextAnonymizer(object):
         assert self.ner_type == "dacy", "DaCy NER model not set"
 
         docs = self.ner_model.pipe(self.corpus, batch_size=batch_size)
-        for i, doc in enumerate(docs):
+        for i, doc in tqdm(enumerate(docs), desc="DaCy NER"):
             for ent in doc.ents:
                 if ent.label_ in self.mapping:
                     self.corpus[i] = self.corpus[i].replace(
