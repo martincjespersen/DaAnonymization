@@ -18,3 +18,4 @@ spacy-transformers==1.0.1
 gensim==3.8.1
 pre-commit==2.10.1
 danlp
+DaCy
