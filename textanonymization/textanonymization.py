@@ -1,6 +1,7 @@
 """Main module."""
 
 from typing import List, Dict, Union, TypedDict, Callable
+import os
 
 from danlp.models import load_bert_ner_model
 import re
@@ -148,9 +149,11 @@ class TextAnonymizer(object):
             self.ner_type = "danlp"
             print(type(self.nlp))
         elif NER_type == "dacy":
-            self.ner_model = spacy.load(
-                "da_dacy_large_tft-0.0.0/da_dacy_large_tft/da_dacy_large_tft-0.0.0"
+            dacy_path = os.environ.get(
+                "DACY",
+                "da_dacy_large_tft-0.0.0/da_dacy_large_tft/da_dacy_large_tft-0.0.0",
             )
+            self.ner_model = spacy.load(dacy_path)
             self.ner_type = "dacy"
         else:
             raise Exception("Not implemented: {}".format(NER_type))
