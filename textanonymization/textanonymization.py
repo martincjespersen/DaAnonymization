@@ -25,7 +25,7 @@ class TextAnonymizer(object):
 
     """
 
-    def __init__(self, corpus: List[str], mask_misc: bool = False):
+    def __init__(self, corpus: List[str] = [], mask_misc: bool = False):
         super(TextAnonymizer, self).__init__()
         self.corpus = corpus
         self.mask_misc = mask_misc

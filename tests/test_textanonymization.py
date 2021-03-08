@@ -33,7 +33,7 @@ def test_cpr_mask(response):
 
     test_string = "Hej med dig, mit CPR nr er 010203-2010"
     test_output = "Hej med dig, mit CPR nr er [CPR]"
-    CorpusObj = textanonymization.TextAnonymizer([""])
+    CorpusObj = textanonymization.TextAnonymizer()
     output = CorpusObj.mask_cpr(test_string)
 
     assert output == test_output
@@ -44,7 +44,7 @@ def test_tlf_mask(response):
 
     test_string = "Hej med dig, mit telefon nr er +4545454545"
     test_output = "Hej med dig, mit telefon nr er [TELEFON]"
-    CorpusObj = textanonymization.TextAnonymizer([""])
+    CorpusObj = textanonymization.TextAnonymizer()
     output = CorpusObj.mask_telefon_nr(test_string)
 
     assert output == test_output
@@ -55,7 +55,7 @@ def test_email_mask(response):
 
     test_string = "Hej med dig, min email er jakob.jakobsen@gmail.com"
     test_output = "Hej med dig, min email er [EMAIL]"
-    CorpusObj = textanonymization.TextAnonymizer([""])
+    CorpusObj = textanonymization.TextAnonymizer()
     output = CorpusObj.mask_email(test_string)
 
     assert output == test_output
