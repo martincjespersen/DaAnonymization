@@ -144,11 +144,3 @@ Next up
 * Implement pseudonymization module (Person 1, Person 2 etc.)
 * Implement customizable replacement masks
 * Potentially implement multiprocessing pool.map for faster regex functions on larger corpora
-
-Credits
--------
-
-This package was created with Cookiecutter_ and the `audreyr/cookiecutter-pypackage`_ project template.
-
-.. _Cookiecutter: https://github.com/audreyr/cookiecutter
-.. _`audreyr/cookiecutter-pypackage`: https://github.com/audreyr/cookiecutter-pypackage
