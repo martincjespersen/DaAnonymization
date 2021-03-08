@@ -21,13 +21,12 @@ class TextAnonymizer(object):
 
     Args:
         corpus: The corpus containing a list of strings
-        context_specific: Boolean to determine if entities should be context specific or not
+
     """
 
-    def __init__(self, corpus: List[str], context_specific: bool = False):
+    def __init__(self, corpus: List[str]):
         super(TextAnonymizer, self).__init__()
         self.corpus = corpus
-        self.context_specific = context_specific
         self.ner_model: nn.Module
         self.nlp: Callable
         self.ner_type: str = ""
@@ -36,9 +35,6 @@ class TextAnonymizer(object):
             "LOC": "LOKATION",
             "ORG": "ORGANISATION",
         }
-
-        if self.context_specific:
-            raise Exception("Context specific anonymization is not implemented yet ")
 
     @staticmethod
     def mask_cpr(text: str) -> str:
