@@ -21,12 +21,14 @@ class TextAnonymizer(object):
 
     Args:
         corpus: The corpus containing a list of strings
+        mask_misc: Enable masking of miscellaneous entities (covers entities such as titles, events, religion etc.)
 
     """
 
-    def __init__(self, corpus: List[str]):
+    def __init__(self, corpus: List[str], mask_misc: bool = False):
         super(TextAnonymizer, self).__init__()
         self.corpus = corpus
+        self.mask_misc = mask_misc
         self.ner_model: nn.Module
         self.nlp: Callable
         self.ner_type: str = ""
@@ -35,6 +37,9 @@ class TextAnonymizer(object):
             "LOC": "LOKATION",
             "ORG": "ORGANISATION",
         }
+
+        if self.mask_misc:
+            self.mapping.update({"MISC": "DIVERSE"})
 
     @staticmethod
     def mask_cpr(text: str) -> str:

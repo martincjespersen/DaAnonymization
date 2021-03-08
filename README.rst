@@ -34,10 +34,11 @@ Features
 
 - Regex for  CPRs, telephone numbers, emails
 - Integration of custom functions as part of the pipeline
-- Named Entity Models for Danish language implemented (PER, LOC, ORG):
+- Named Entity Models for Danish language implemented (PER, LOC, ORG, MISC):
     - DaCy: https://github.com/KennethEnevoldsen/DaCy
         - DaCy is built on multilingual RoBERTa, enabling support for other languages as well as Danish.
     - DaNLP: https://github.com/alexandrainst/danlp
+    - Default entities to mask: PER, LOC and ORG (MISC can be specified but covers many different entitites)
 - Batch mode for DaCy, **highly recommended** if predicting a lot of documents and it is robust to language changes as it is fine tuned from a **multilingual model**
 
 Installation
