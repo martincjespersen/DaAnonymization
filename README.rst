@@ -36,8 +36,9 @@ Features
 - Integration of custom functions as part of the pipeline
 - Named Entity Models for Danish language implemented (PER, LOC, ORG):
     - DaCy: https://github.com/KennethEnevoldsen/DaCy
+        - DaCy is built on multilingual RoBERTa, enabling support for other languages as well as Danish.
     - DaNLP: https://github.com/alexandrainst/danlp
-- Batch mode for DaCy, **highly recommended** if predicting a lot of documents
+- Batch mode for DaCy, **highly recommended** if predicting a lot of documents and it is robust to language changes as it is fine tuned from a **multilingual model**
 
 Installation
 ------------
