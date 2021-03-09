@@ -18,6 +18,7 @@ class BERT_output(TypedDict):
     text: str
 
 
+######### DaCy multiprocessing hack START #########
 # Hack to make DaCy multiprocessable for both spawn and fork (SpaCy 3.0 issue with pickle)
 torch.set_num_threads(1)
 num_cpus: int = int(os.cpu_count())  # type: ignore
@@ -32,6 +33,9 @@ if os.path.exists(dacy_path):
 
 def worker(text: List[str]):  # type: ignore
     return list(ner_model.pipe(text, batch_size=len(text)))
+
+
+######### DaCy multiprocessing hack END #########
 
 
 class TextAnonymizer(object):
@@ -231,6 +235,7 @@ class TextAnonymizer(object):
 
         Args:
             batch_size: Number of texts to include in a batch
+            n_process: Number of CPU cores to split computational on
 
         Returns:
             None
@@ -276,6 +281,7 @@ class TextAnonymizer(object):
             masking_methods: Directed list of masking methods to apply to the corpus
             custom_functions: Dictionary containing custom masking functions as values and their names as keys
             batch_size: Used for DaCy running in batch mode
+            n_process: Number of CPU cores to split computational on
 
         Returns:
             Anonymized version of the corpus
