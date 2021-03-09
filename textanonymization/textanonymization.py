@@ -2,18 +2,36 @@
 
 from typing import List, Dict, Union, TypedDict, Callable, Optional
 import os
-from tqdm import tqdm
+from sys import platform
 
 from danlp.models import load_bert_ner_model
 import re
 import da_core_news_sm
 import spacy
 import torch.nn as nn
+import torch
+import multiprocessing
 
 
 class BERT_output(TypedDict):
     entities: List[Dict[str, Union[int, str]]]
     text: str
+
+
+# Hack to make DaCy multiprocessable for both spawn and fork (SpaCy 3.0 issue with pickle)
+torch.set_num_threads(1)
+num_cpus: int = int(os.cpu_count())  # type: ignore
+dacy_path: str = os.environ.get(
+    "DACY",
+    "da_dacy_large_tft-0.0.0/da_dacy_large_tft/da_dacy_large_tft-0.0.0",
+)
+ner_model: nn.Module = None
+if os.path.exists(dacy_path):
+    ner_model = spacy.load(dacy_path)  # type: ignore
+
+
+def worker(text: List[str]):  # type: ignore
+    return list(ner_model.pipe(text, batch_size=len(text)))
 
 
 class TextAnonymizer(object):
@@ -149,11 +167,13 @@ class TextAnonymizer(object):
             self.ner_type = "danlp"
             print(type(self.nlp))
         elif NER_type == "dacy":
-            dacy_path = os.environ.get(
-                "DACY",
-                "da_dacy_large_tft-0.0.0/da_dacy_large_tft/da_dacy_large_tft-0.0.0",
-            )
-            self.ner_model = spacy.load(dacy_path)
+            # dacy_path = os.environ.get(
+            #     "DACY",
+            #     "da_dacy_large_tft-0.0.0/da_dacy_large_tft/da_dacy_large_tft-0.0.0",
+            # )
+            # global ner_model
+            # #self.ner_model = spacy.load(dacy_path)
+            # ner_model = spacy.load(dacy_path)
             self.ner_type = "dacy"
         else:
             raise Exception("Not implemented: {}".format(NER_type))
@@ -205,7 +225,7 @@ class TextAnonymizer(object):
 
         return entities
 
-    def _batch_prediction_DaCy(self, batch_size: int) -> None:
+    def _batch_prediction_DaCy(self, batch_size: int, n_process: int) -> None:
         """
         Runs DaCy NER model on full corpus in batch mode and masks entities
 
@@ -217,9 +237,21 @@ class TextAnonymizer(object):
 
         """
         assert self.ner_type == "dacy", "DaCy NER model not set"
+        if platform == "linux" or platform == "linux2" or platform == "darwin":
+            multiprocessing.set_start_method("fork")
+        elif platform == "win32":
+            multiprocessing.set_start_method("spawn")
 
-        docs = self.ner_model.pipe(self.corpus, batch_size=batch_size)
-        for i, doc in tqdm(enumerate(docs), desc="DaCy NER"):
+        batches = (
+            self.corpus[pos : pos + batch_size]
+            for pos in range(0, len(self.corpus), batch_size)
+        )
+        with multiprocessing.Pool(n_process) as p:
+            results = p.map(worker, batches)
+
+        results = [item for sublist in results for item in sublist]
+
+        for i, doc in enumerate(results):
             for ent in doc.ents:
                 if ent.label_ in self.mapping:
                     self.corpus[i] = self.corpus[i].replace(
@@ -235,6 +267,7 @@ class TextAnonymizer(object):
         masking_methods: List[str] = ["cpr", "telefon", "email", "NER"],
         custom_functions: Dict[str, Callable] = {},
         batch_size: int = 8,
+        n_process: int = num_cpus,
     ) -> List[str]:
         """
         Mask a corpus of danish text with provided methods
@@ -264,6 +297,6 @@ class TextAnonymizer(object):
             self.corpus = list(map(methods[method], self.corpus))  # type: ignore
 
         if self.ner_type == "dacy":
-            self._batch_prediction_DaCy(batch_size)
+            self._batch_prediction_DaCy(batch_size, n_process)
 
         return self.corpus
