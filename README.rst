@@ -59,7 +59,9 @@ A prerequisite for the SpaCy nlp to run, the Danish version has to be installed 
 
 
 **Note:**
-To enable DaCy as a NER model you need to download the **large model** folder and place it within the root of this repository or setting the path in an environmental variable ``DACY = path_to_dacyfolder``. Follow the instructions here: https://github.com/KennethEnevoldsen/DaCy
+To enable DaCy as a NER model you need to download the **large model** folder and place it within the root of this repository or setting the path in an environmental variable ``DACY = path_to_dacyfolder``.
+To download follow the instructions here: `KennethEnevoldsen GitHub <https://github.com/KennethEnevoldsen/DaCy>`_
+Or alternatively here: `MartinCJ Google Drive <https://drive.google.com/file/d/1fHyYGG01pFdMpynerxl_JaX_XZh_z0kl/view?usp=sharing>`_
 
 
 Quickstart
