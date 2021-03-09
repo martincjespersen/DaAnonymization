@@ -140,9 +140,8 @@ Next up
 --------
 
 * Add test on >512 tokens sentence
-* Fix parallel problem of DaCy
-* More comprehensive tests on larger corpus'
+* Add GPU support for NER models
 * Test NER models for possible bias with person entities
 * Optimize predicting with DaNLP creating a modified prediction function
 * Implement pseudonymization module (Person 1, Person 2 etc.)
-* Potentially implement multiprocessing pool.map for faster regex functions on larger corpora
+* When SpaCy fixed multiprocessing in nlp.pipe, remove current hack
