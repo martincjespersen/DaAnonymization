@@ -136,8 +136,8 @@ As each project can have specific needs, DaAnonymization supports adding custom 
     Hej, jeg hedder [PERSON], er [ALDER], er fra [LOKATION] og arbejder i [ORGANISATION],
     mit cpr er [CPR], telefon: [TELEFON] og email: [EMAIL]
 
-Fairness tests
---------------
+Fairness evaluations
+--------------------
 **Disclaimer:** Working progress on: `Benchmark Fairness <https://colab.research.google.com/drive/1qVdP99ZSqROfalUh63DVJ-5A6MhWrT3_?usp=sharing>`_
 In the table 1, the DaNE dataset had all first name resampled (female only due to data) first a sanity check using female first names with danish origin (Sampled Danish names) and following other female names with origins than Danish (Sampled Other names). Both F1 scores are sampled by reproducing it 100 times and averaging. A small drop is found using female danish names only and further dropped using names from different origins. T
 
@@ -151,11 +151,11 @@ In the table 1, the DaNE dataset had all first name resampled (female only due t
      - Sampled Danish names
      - Sampled Other names
    * - DaNLP NER
-     - 0.928
-     - 0.906
-     - 0.890
+     - 92.8
+     - 90.6
+     - 89.0
    * - DaCy
-     - TBD
+     - 95.5
      - TBD
      - TBD
 
