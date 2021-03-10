@@ -136,11 +136,32 @@ As each project can have specific needs, DaAnonymization supports adding custom 
     Hej, jeg hedder [PERSON], er [ALDER], er fra [LOKATION] og arbejder i [ORGANISATION],
     mit cpr er [CPR], telefon: [TELEFON] og email: [EMAIL]
 
+Fairness tests
+--------------
+Working progress on: `Benchmark Fairness <https://colab.research.google.com/drive/1qVdP99ZSqROfalUh63DVJ-5A6MhWrT3_?usp=sharing>`_
+
+.. list-table:: Fairness of names of other origin than Danish
+   :widths: 15 10 30
+   :header-rows: 1
+
+   * - Treat
+     - Quantity
+     - Description
+   * - Albatross
+     - 2.99
+     - On a stick!
+   * - Crunchy Frog
+     - 1.49
+     - If we took the bones out, it wouldn't be
+       crunchy, now would it?
+   * - Gannet Ripple
+     - 1.99
+     - On a stick!
+
 Next up
 --------
 
 * Add test on >512 tokens sentence
-* Add GPU support for NER models
 * Test NER models for possible bias with person entities
 * Optimize predicting with DaNLP creating a modified prediction function
 * Implement pseudonymization module (Person 1, Person 2 etc.)
