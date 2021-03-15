@@ -138,7 +138,7 @@ As each project can have specific needs, DaAnonymization supports adding custom 
 
 Fairness evaluations
 --------------------
-**Disclaimer:** Working progress on: `Benchmark Fairness <https://colab.research.google.com/drive/1qVdP99ZSqROfalUh63DVJ-5A6MhWrT3_?usp=sharing>`_
+**Disclaimer:** Work in progress on: `Benchmark Fairness <https://colab.research.google.com/drive/1qVdP99ZSqROfalUh63DVJ-5A6MhWrT3_?usp=sharing>`_
 
 In the table 1, the DaNE dataset had all first name resampled (female only due to data) first a sanity check using female first names with danish origin (Sampled Danish names) and following other female names with origins than Danish (Sampled Other names). Both F1 scores are sampled by reproducing it 100 times and averaging. A small drop is found using female danish names only and further dropped using names from different origins.
 
