@@ -73,7 +73,7 @@ DaAnonymization's main component **TextAnonymizer** uses its ``mask_corpus`` fun
 
 .. code-block:: python
 
-    from textanonymization import textanonymization
+    from textprivacy import TextAnonymizer
 
     # list of texts
     corpus = [
@@ -82,7 +82,7 @@ DaAnonymization's main component **TextAnonymizer** uses its ``mask_corpus`` fun
         "og email: martin.martin@gmail.com",
     ]
 
-    Anonymizer = textanonymization.TextAnonymizer(corpus)
+    Anonymizer = TextAnonymizer(corpus)
 
     # load danlp as NER model
     Anonymizer._load_NER_model("danlp")
@@ -107,7 +107,7 @@ As each project can have specific needs, DaAnonymization supports adding custom 
 
 .. code-block:: python
 
-    from textanonymization import textanonymization
+    from textprivacy import TextAnonymizer
 
     # Takes string as input and returns a masked version of the string
     example_custom_function = lambda x: x.replace('20 år', '[ALDER]')
@@ -119,7 +119,7 @@ As each project can have specific needs, DaAnonymization supports adding custom 
         "og email: martin.martin@gmail.com",
     ]
 
-    Anonymizer = textanonymization.TextAnonymizer(corpus)
+    Anonymizer = TextAnonymizer(corpus)
 
     # load danlp as NER model
     Anonymizer._load_NER_model("danlp")
@@ -173,4 +173,3 @@ Next up
 * Test NER models for possible bias with person entities
 * Implement pseudonymization module (Person 1, Person 2 etc.)
 * When SpaCy fixed multiprocessing in nlp.pipe, remove current hack
-* Possibly retrain model with OneNotes v5 for 18 different entities and fine tune on DaNE?

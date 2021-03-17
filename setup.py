@@ -51,7 +51,7 @@ setup(
     description="Python Boilerplate contains all the boilerplate you need to create a Python package.",
     entry_points={
         "console_scripts": [
-            "textanonymization=textanonymization.cli:main",
+            "textprivacy=textprivacy.cli:main",
         ],
     },
     install_requires=requirements,
@@ -60,7 +60,7 @@ setup(
     include_package_data=True,
     keywords="DaAnonymization",
     name="DaAnonymization",
-    packages=find_packages(include=["textanonymization", "textanonymization.*"]),
+    packages=find_packages(include=["textprivacy", "textanonymization.*"]),
     setup_requires=setup_requirements,
     test_suite="tests",
     tests_require=test_requirements,

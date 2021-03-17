@@ -177,7 +177,6 @@ class TextAnonymizer(object):
         if NER_type == "danlp":
             self.ner_model = load_bert_ner_model()
             self.ner_type = "danlp"
-            print(type(self.nlp))
         elif NER_type == "dacy":
             # dacy_path = os.environ.get(
             #     "DACY",

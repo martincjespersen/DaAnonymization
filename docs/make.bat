@@ -9,7 +9,7 @@ if "%SPHINXBUILD%" == "" (
 )
 set SOURCEDIR=.
 set BUILDDIR=_build
-set SPHINXPROJ=textanonymization
+set SPHINXPROJ=textprivacy
 
 if "%1" == "" goto help
 

@@ -2,6 +2,6 @@
 Usage
 =====
 
-To use TextAnonymization in a project::
+To use DaAnonymization in a project::
 
-    import textanonymization
+    import textprivacy

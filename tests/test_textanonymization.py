@@ -6,8 +6,8 @@ import pytest
 
 from click.testing import CliRunner
 
-from textanonymization import textanonymization
-from textanonymization import cli
+from textprivacy import TextAnonymizer
+from textprivacy import cli
 
 import re
 
@@ -33,7 +33,7 @@ def test_cpr_mask(response):
 
     test_string = "Hej med dig, mit CPR nr er 010203-2010"
     test_output = "Hej med dig, mit CPR nr er [CPR]"
-    CorpusObj = textanonymization.TextAnonymizer()
+    CorpusObj = TextAnonymizer()
     output = CorpusObj.mask_cpr(test_string)
 
     assert output == test_output
@@ -44,7 +44,7 @@ def test_tlf_mask(response):
 
     test_string = "Hej med dig, mit telefon nr er +4545454545"
     test_output = "Hej med dig, mit telefon nr er [TELEFON]"
-    CorpusObj = textanonymization.TextAnonymizer()
+    CorpusObj = TextAnonymizer()
     output = CorpusObj.mask_telefon_nr(test_string)
 
     assert output == test_output
@@ -55,7 +55,7 @@ def test_email_mask(response):
 
     test_string = "Hej med dig, min email er jakob.jakobsen@gmail.com"
     test_output = "Hej med dig, min email er [EMAIL]"
-    CorpusObj = textanonymization.TextAnonymizer()
+    CorpusObj = TextAnonymizer()
     output = CorpusObj.mask_email(test_string)
 
     assert output == test_output
@@ -78,7 +78,7 @@ def test_corpus_mask(response):
         "[ORGANISATION], mit cpr er [CPR], telefon: [TELEFON] "
         "og email: [EMAIL]. [PERSON] er en 20 årig mand.",
     ]
-    CorpusObj = textanonymization.TextAnonymizer(test_corpus)
+    CorpusObj = TextAnonymizer(test_corpus)
     CorpusObj._load_NER_model("danlp")
     masked_corpus = CorpusObj.mask_corpus()
 
@@ -122,7 +122,7 @@ def test_custom_mask(response):
         "[ORGANISATION], mit cpr er [CPR], telefon: [TELEFON] "
         "og email: [EMAIL]",
     ]
-    CorpusObj = textanonymization.TextAnonymizer(test_corpus)
+    CorpusObj = TextAnonymizer(test_corpus)
     CorpusObj._load_NER_model("danlp")
     masked_corpus = CorpusObj.mask_corpus(
         masking_methods=["cpr", "telefon", "email", "NER", "alder"],
@@ -151,7 +151,7 @@ def test_dacy_NER(response):
         "[ORGANISATION], mit cpr er [CPR], telefon: [TELEFON] "
         "og email: [EMAIL]. [PERSON] er en 20 årig mand.",
     ]
-    CorpusObj = textanonymization.TextAnonymizer(test_corpus)
+    CorpusObj = TextAnonymizer(test_corpus)
     CorpusObj._load_NER_model("dacy")
     masked_corpus = CorpusObj.mask_corpus()
 
@@ -165,7 +165,7 @@ def test_command_line_interface():
     runner = CliRunner()
     result = runner.invoke(cli.main)
     assert result.exit_code == 0
-    assert "textanonymization.cli.main" in result.output
+    assert "textprivacy.cli.main" in result.output
     help_result = runner.invoke(cli.main, ["--help"])
     assert help_result.exit_code == 0
     assert "--help  Show this message and exit." in help_result.output

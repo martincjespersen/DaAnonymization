@@ -1,4 +1,4 @@
-Welcome to TextAnonymization's documentation!
+Welcome to DaAnonymization's documentation!
 ======================================
 
 .. toctree::
