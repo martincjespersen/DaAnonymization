@@ -15,6 +15,11 @@ import multiprocessing
 spacy.prefer_gpu()
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
+if platform == "linux" or platform == "linux2" or platform == "darwin":
+    multiprocessing.set_start_method("fork")
+elif platform == "win32":
+    multiprocessing.set_start_method("spawn")
+
 
 class BERT_output(TypedDict):
     entities: List[Dict[str, Union[int, str]]]
@@ -247,11 +252,6 @@ class TextAnonymizer(object):
         assert self.ner_type == "dacy", "DaCy NER model not set"
 
         if device != "cuda":
-            if platform == "linux" or platform == "linux2" or platform == "darwin":
-                multiprocessing.set_start_method("fork")
-            elif platform == "win32":
-                multiprocessing.set_start_method("spawn")
-
             batches = (
                 self.corpus[pos : pos + batch_size]
                 for pos in range(0, len(self.corpus), batch_size)

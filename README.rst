@@ -25,6 +25,10 @@ Description
 -----------
 A simple pipeline wrapped around SpaCy, DaNLP and DaCy for anonymizing danish corpora. The pipeline allows for custom functions to be implemented and piped in combination with custom functions.
 
+The **DaCy model** is built on **multilingual RoBERTa** which enables **zero shot learning** for other languagues ultimately providing a robust named entity recognition model for anonymization that is able to handle noisy Danish text data which could include other languages.
+
+Languages used in the multilingual RoBERTa can be found in appendix A of XLM-RoBERTa paper: `Unsupervised Cross lingual Representation Learning at Scale <https://arxiv.org/pdf/1911.02116.pdf>`_
+
 * Free software: Apache-2.0 license
 
 **Disclaimer:** As the pipeline utilizes predictive models and regex function to identify entities, there is no guarantee that all sensitive information have been remove.
@@ -36,10 +40,9 @@ Features
 - Integration of custom functions as part of the pipeline
 - Named Entity Models for Danish language implemented (PER, LOC, ORG, MISC):
     - DaCy: https://github.com/KennethEnevoldsen/DaCy
-        - DaCy is built on multilingual RoBERTa, enabling support for other languages as well as Danish.
     - DaNLP: https://github.com/alexandrainst/danlp
     - Default entities to mask: PER, LOC and ORG (MISC can be specified but covers many different entitites)
-- Batch mode for DaCy, **highly recommended** if predicting a lot of documents and it is robust to language changes as it is fine tuned from a **multilingual model**
+- Batch mode and multiprocessing for DaCy, **highly recommended** if predicting a lot of documents and it is robust to language changes as it is fine tuned from a **multilingual RoBERTa model**
 
 Installation
 ------------
@@ -165,7 +168,9 @@ Next up
 --------
 
 * Add test on >512 tokens sentence
+* Add logging to the pipeline
+* Add numerical mask/adding noise component
 * Test NER models for possible bias with person entities
-* Optimize predicting with DaNLP creating a modified prediction function
 * Implement pseudonymization module (Person 1, Person 2 etc.)
 * When SpaCy fixed multiprocessing in nlp.pipe, remove current hack
+* Possibly retrain model with OneNotes v5 for 18 different entities and fine tune on DaNE?
