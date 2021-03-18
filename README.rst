@@ -101,9 +101,12 @@ As each project can have specific needs, DaAnonymization supports adding custom 
 .. code-block:: python
 
     from textprivacy import TextAnonymizer
+    import re
 
-    # Takes string as input and returns a masked version of the string
-    example_custom_function = lambda x: x.replace('20 år', '[ALDER]')
+
+
+    # Takes string as input and returns a set of all occurences
+    example_custom_function = lambda x: set(list(re.findall(r"\d+ år", x)))
 
     # list of texts
     corpus = [
@@ -114,11 +117,13 @@ As each project can have specific needs, DaAnonymization supports adding custom 
 
     Anonymizer = TextAnonymizer(corpus)
 
+    # update the mapping to include new custom function entity finder and replacement placeholder
+    Anonymizer.mapping.update({"ALDER": "[ALDER]"})
 
-    # add the name to masking_methods in the desired order
+    # add the name to masking_order in the desired order
     # add custom function to custom_functions to update pool of possible masking functions
     anonymized_corpus = Anonymizer.mask_corpus(
-        masking_methods=["CPR", "TELEFON", "EMAIL", "NER", "ALDER"],
+        masking_order=["CPR", "TELEFON", "EMAIL", "NER", "ALDER"],
         custom_functions={"ALDER": example_custom_function},
     )
 
