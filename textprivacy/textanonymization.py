@@ -276,6 +276,7 @@ class TextAnonymizer(object):
             batch_size: Used for DaCy running in batch mode
             n_process: Number of CPU cores to split computational on
             logging_file: Save log to file
+            loglevel: Logging level to include in logging (default debug: include all)
 
         Returns:
             Anonymized version of the corpus
