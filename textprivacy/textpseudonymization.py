@@ -1,0 +1,161 @@
+"""Main module."""
+
+from typing import List, Dict, Set, Callable
+from textprivacy.textanonymization import TextAnonymizer
+
+
+class TextPseudonymizer(TextAnonymizer):
+    """
+    Object of a text corpus to apply masking function for pseudonymization
+
+    Args:
+        corpus: The corpus containing a list of strings
+        mask_misc: Enable masking of miscellaneous entities (covers entities such as titles, events, religion etc.)
+        individuals: Preset known individuals as a dict of dicts of dicts for specifying text index, person index and entities. For example:
+                    individuals = { 100: {1: {'PER': {'Martin Jespersen', 'Martin', 'Jespersen, Martin'} } }}
+
+    """
+
+    def __init__(
+        self,
+        corpus: List[str] = [],
+        mask_misc: bool = False,
+        individuals: Dict[int, Dict[int, Dict[str, Set[str]]]] = {},
+    ):
+        super(TextPseudonymizer, self).__init__(corpus, mask_misc, False)
+        self.individuals = individuals  # type: ignore
+        self.mapping: Dict[str, str] = {
+            "PER": "Person",
+            "LOC": "Lokation",
+            "ORG": "Organisation",
+            "CPR": "CPR",
+            "TELEFON": "Telefon",
+            "EMAIL": "Email",
+        }
+
+        if self.mask_misc:
+            self.mapping.update({"MISC": "Diverse"})
+
+    """
+    ################## Helper functions #################
+    """
+
+    def _update_entity(
+        self,
+        entities: Set[str],
+        current_individuals: Dict[int, Dict[str, Set[str]]],
+        entity_type: str,
+    ) -> Dict[int, Dict[str, Set[str]]]:
+
+        """
+        Updates and pairs of the entity to individuals
+
+        Args:
+            entities: A set of entities identified
+            current_individuals: Dictionary of current individuals and their identified entities
+            entity_type: Current entity to update and pair to individuals
+
+        Returns:
+            A dictionary of current individuals and their entities
+
+        """
+
+        sorted_entities = sorted(entities, key=len, reverse=True)
+        n_individals: int = 0
+        if current_individuals:
+            n_individals = max(current_individuals.keys())
+
+        while sorted_entities:
+            entity = sorted_entities.pop(0)
+
+            flag = False
+            for individual in current_individuals:
+                if entity_type in current_individuals[individual] and any(
+                    entity.lower() in e.lower()
+                    for e in current_individuals[individual][entity_type]
+                ):
+                    flag = True
+                    current_individuals[individual][entity_type].add(entity)
+
+            if not flag:
+                n_individals += 1
+                current_individuals[n_individals] = {x: set() for x in self.mapping}
+                current_individuals[n_individals][entity_type].add(entity)
+
+        return current_individuals
+
+    def _update_individuals(
+        self, all_entities: Dict[str, Set[str]], index: int
+    ) -> Dict[int, Dict[str, Set[str]]]:
+        """
+        Updates all types of entities for all individuals in a text
+
+        Args:
+            all_entities: A dictionary of all entities found in the text
+            index: The index of the current text's placement in corpus
+
+        Returns:
+            A dictionary of current individuals and their entities
+
+        """
+        current_individuals = self.individuals.get(index, {})
+        order_entities = sorted(list(all_entities.keys()))
+        order_entities.pop(order_entities.index("PER"))
+        order_entities.insert(0, "PER")
+
+        for ent in order_entities:
+            if all_entities[ent]:
+                current_individuals = self._update_entity(
+                    all_entities[ent], current_individuals, ent  # type: ignore
+                )
+
+        return current_individuals  # type: ignore
+
+    def _apply_masks(
+        self,
+        text: str,
+        methods: Dict[str, Callable],
+        masking_order: List[str],
+        ner_entities: Dict[str, Set[str]],
+        index: int,
+    ) -> str:
+        """
+        Masks a a set of entity types from a text
+
+        Args:
+            text: Text to mask entities from
+            methods: A dictionary of masking methods to apply
+            masking_order: The order of applying masking functions
+            ner_entities: A dictiornary of lists containing the named entities found with DaCy
+            index: Index of the text's placement in corpus
+
+        Returns:
+            A text with the a set of entity types masked
+
+        """
+        all_entities: Dict[str, Set[str]] = {}
+        for method in masking_order:
+            if method != "NER":
+                entities = methods[method](text)
+                all_entities[method] = entities
+            else:
+                # Handle DaCy entities
+                all_entities.update(ner_entities)
+
+        individuals = self._update_individuals(all_entities, index)
+
+        for person in sorted(individuals):
+            suffix = " {}".format(person)
+            for method in masking_order:
+                if method != "NER" and method in individuals[person]:
+                    text = self.mask_entities(
+                        text, individuals[person][method], method, suffix=suffix
+                    )
+                else:
+                    for ent in self._supported_NE:
+                        if ent in individuals[person]:
+                            text = self.mask_entities(
+                                text, individuals[person][ent], ent, suffix=suffix
+                            )
+
+        return text

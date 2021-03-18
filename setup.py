@@ -16,7 +16,6 @@ requirements = [
     "torch==1.8.0",
     "spacy-transformers==1.0.1",
     "transformers==3.1.0",
-    "danlp",
     "gensim==3.8.1",
     "pip==19.2.3",
     "click==7.1.2",
@@ -60,7 +59,9 @@ setup(
     include_package_data=True,
     keywords="DaAnonymization",
     name="DaAnonymization",
-    packages=find_packages(include=["textprivacy", "textanonymization.*"]),
+    packages=find_packages(
+        include=["textprivacy", "textanonymization.*", "textpseudonymization.*"]
+    ),
     setup_requires=setup_requirements,
     test_suite="tests",
     tests_require=test_requirements,

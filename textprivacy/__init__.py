@@ -5,3 +5,4 @@ __email__ = "martincjespersen@gmail.com"
 __version__ = "0.1.0"
 
 from textprivacy.textanonymization import TextAnonymizer
+from textprivacy.textpseudonymization import TextPseudonymizer

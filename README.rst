@@ -23,7 +23,7 @@ Anonymization tool for Danish text
 
 Description
 -----------
-A simple pipeline wrapped around SpaCy, DaNLP and DaCy for anonymizing danish corpora. The pipeline allows for custom functions to be implemented and piped in combination with custom functions.
+A simple pipeline wrapped around SpaCy and DaCy for anonymizing danish corpora. The pipeline allows for custom functions to be implemented and piped in combination with custom functions.
 
 The **DaCy model** is built on **multilingual RoBERTa** which enables **zero shot learning** for other languagues ultimately providing a robust named entity recognition model for anonymization that is able to handle noisy Danish text data which could include other languages.
 
@@ -40,9 +40,13 @@ Features
 - Integration of custom functions as part of the pipeline
 - Named Entity Models for Danish language implemented (PER, LOC, ORG, MISC):
     - DaCy: https://github.com/KennethEnevoldsen/DaCy
-    - DaNLP: https://github.com/alexandrainst/danlp
     - Default entities to mask: PER, LOC and ORG (MISC can be specified but covers many different entitites)
-- Batch mode and multiprocessing for DaCy, **highly recommended** if predicting a lot of documents and it is robust to language changes as it is fine tuned from a **multilingual RoBERTa model**
+    - Batch mode and multiprocessing
+    - DaCy is robust to language changes as it is fine tuned from a **multilingual RoBERTa model**
+- Allow anonymizing using suppression
+- Allow masking to be aware of prior knowledge about individuals occuring in the texts
+- Pseudonymization module (Person 1, Person 2 etc.)
+
 
 Installation
 ------------
@@ -54,22 +58,14 @@ To install from source:
     cd DaAnonymization
     python setup.py install
 
-A prerequisite for the SpaCy nlp to run, the Danish version has to be installed running the following command:
-
-.. code-block:: bash
-
-    python -m spacy download da_core_news_sm
-
-
 **Note:**
-To enable DaCy as a NER model you need to download the **large model** folder and place it within the root of this repository or setting the path in an environmental variable ``DACY = path_to_dacyfolder``.
-To download follow the instructions here: `KennethEnevoldsen GitHub <https://github.com/KennethEnevoldsen/DaCy>`_
-Or alternatively here: `MartinCJ Google Drive <https://drive.google.com/file/d/1fHyYGG01pFdMpynerxl_JaX_XZh_z0kl/view?usp=sharing>`_
+To use DaCy as a NER model you need to download the **large model** folder and place it within the root of this repository or setting the path in an environmental variable ``DACY = path_to_dacyfolder``.
+To download the model from DaCy can be found here: `MartinCJ Google Drive <https://drive.google.com/file/d/1fHyYGG01pFdMpynerxl_JaX_XZh_z0kl/view?usp=sharing>`_
 
 
 Quickstart
 ----------
-DaAnonymization's main component **TextAnonymizer** uses its ``mask_corpus`` function to anonymize text by removing person, location, organization, email, telephone number and CPR. The order of these masking methods are by default CPR, telephone number, email and NER (PER,LOC,ORG) as NER will identify names in the emails.
+DaAnonymization's two main components are **TextAnonymizer** and **TextPseudonymizer** which both uses their ``mask_corpus`` function to anonymize/pseudonymize text by removing person, location, organization, email, telephone number and CPR. The order of these masking methods are by default CPR, telephone number, email and NER (PER,LOC,ORG) as NER will identify names in the emails.
 
 .. code-block:: python
 
@@ -83,9 +79,6 @@ DaAnonymization's main component **TextAnonymizer** uses its ``mask_corpus`` fun
     ]
 
     Anonymizer = TextAnonymizer(corpus)
-
-    # load danlp as NER model
-    Anonymizer._load_NER_model("danlp")
 
     # Anonymize person, location, organization, emails, CPR and telephone numbers
     anonymized_corpus = Anonymizer.mask_corpus()
@@ -121,14 +114,12 @@ As each project can have specific needs, DaAnonymization supports adding custom 
 
     Anonymizer = TextAnonymizer(corpus)
 
-    # load danlp as NER model
-    Anonymizer._load_NER_model("danlp")
 
     # add the name to masking_methods in the desired order
     # add custom function to custom_functions to update pool of possible masking functions
     anonymized_corpus = Anonymizer.mask_corpus(
-        masking_methods=["cpr", "telefon", "email", "NER", "alder"],
-        custom_functions={"alder": example_custom_function},
+        masking_methods=["CPR", "TELEFON", "EMAIL", "NER", "ALDER"],
+        custom_functions={"ALDER": example_custom_function},
     )
 
     for text in anonymized_corpus:
@@ -138,6 +129,64 @@ As each project can have specific needs, DaAnonymization supports adding custom 
 
     Hej, jeg hedder [PERSON], er [ALDER], er fra [LOKATION] og arbejder i [ORGANISATION],
     mit cpr er [CPR], telefon: [TELEFON] og email: [EMAIL]
+
+
+
+Pseudonymization with prior knowledge
+-------------------------------------
+Sometimes it can be useful to maintain some context regarding sensitive information within the text. Pseudonymization allows for maintaining the connection between entities while masking them. Essentially this means adding a unique identifier for each individual and their information in the text.
+
+By using the **optional** input argument ``individuals``, you can add prior information about known individuals in the text you want to mask. The structure of individuals needs to be as shown below. The first dictionary provides a key for index of the text in the corpus, the next the unique identifier (integer) of the individuals and finally a dictionary of entities known prior for each individual.
+
+.. code-block:: python
+
+    from textprivacy import TextPseudonymizer
+
+    # prior information about the text
+    individuals = {1:
+                    {1:
+                        {'PER': set(['Martin Jespersen', 'Martin', 'Jespersen, Martin']),
+                         'CPR': set(['010203-2010']),
+                         'EMAIL': set(['martin.martin@gmail.com']),
+                         'LOC': set(['Danmark']),
+                         'ORG': set(['Deloitte'])
+                         },
+                    2:
+                        {'PER': set(['Kristina']),
+                         'ORG': set(['Novo Nordisk'])
+                         }
+                     }
+
+                  }
+
+    # list of texts
+    corpus = [
+        "Første tekst om intet, blot Martin",
+        "Hej, jeg hedder Martin Jespersen og er fra Danmark og arbejder i "
+        "Deloitte, mit cpr er 010203-2010, telefon: +4545454545 "
+        "og email: martin.martin@gmail.com. Martin er en 20 årig mand. "
+        "Kristina er en person som arbejder i Novo Nordisk. "
+        "Frank er en mand som bor i Danmark og arbejder i Netto",
+    ]
+
+    Pseudonymizer = TextPseudonymizer(corpus, individuals=individuals)
+
+    # Pseudonymize person, location, organization, emails, CPR and telephone numbers
+    pseudonymized_corpus = Pseudonymizer.mask_corpus()
+
+    for text in pseudonymized_corpus:
+        print(text)
+
+
+.. code-block:: console
+
+    Første tekst om intet, blot Person 1
+
+    Hej, jeg hedder Person 1 og er fra Lokation 1 og arbejder i Organisation 1, mit cpr er CPR 1,
+    telefon: Telefon 5 og email: Email 1. Person 1 er en 20 årig mand. Person 2 er en person som
+    arbejder i Organisation 2. Person 3 er en mand som bor i Lokation 1 og arbejder i Organisation 4
+
+
 
 Fairness evaluations
 --------------------
