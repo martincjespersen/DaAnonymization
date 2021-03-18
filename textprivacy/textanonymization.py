@@ -297,6 +297,7 @@ class TextAnonymizer(object):
                 datefmt="%d-%b-%y %H:%M:%S",
                 level=log_level,
             )
+        logging.info("##### Starting masking corpus #####")
         logging.info(f"Texts within corpus: {len(self.corpus)}")
         logging.info(f"Batch size for DaCy: {batch_size}")
         logging.info(f"Number of processes: {n_process}")
@@ -322,5 +323,5 @@ class TextAnonymizer(object):
             text = self._apply_masks(text, methods, masking_order, entities[i], i)
             self.transformed_corpus.append(text)
 
-        logging.info("Completed masking!")
+        logging.info("##### Completed masking! #####")
         return self.transformed_corpus
