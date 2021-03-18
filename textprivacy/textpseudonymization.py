@@ -3,6 +3,8 @@
 from typing import List, Dict, Set, Callable
 from textprivacy.textanonymization import TextAnonymizer
 
+import logging
+
 
 class TextPseudonymizer(TextAnonymizer):
     """
@@ -33,8 +35,11 @@ class TextPseudonymizer(TextAnonymizer):
             "EMAIL": "Email",
         }
 
+        self._supported_NE: List[str] = ["PER", "LOC", "ORG"]
+
         if self.mask_misc:
             self.mapping.update({"MISC": "Diverse"})
+            self._supported_NE = ["PER", "LOC", "ORG", "MISC"]
 
     """
     ################## Helper functions #################
@@ -143,7 +148,7 @@ class TextPseudonymizer(TextAnonymizer):
                 all_entities.update(ner_entities)
 
         individuals = self._update_individuals(all_entities, index)
-
+        total_people = 0
         for person in sorted(individuals):
             suffix = " {}".format(person)
             for method in masking_order:
@@ -157,5 +162,10 @@ class TextPseudonymizer(TextAnonymizer):
                             text = self.mask_entities(
                                 text, individuals[person][ent], ent, suffix=suffix
                             )
+                            if ent == "PER":
+                                total_people += len(individuals[person][ent])
+
+        if total_people == 0:
+            logging.warning(f"No person found in text at index {index} of text corpus")
 
         return text

@@ -1,8 +1,9 @@
 """Main module."""
 
-from typing import List, Dict, Union, Set, Tuple, Callable
+from typing import List, Dict, Union, Set, Callable
 import os
 from sys import platform
+import logging
 
 import re
 import spacy
@@ -74,10 +75,11 @@ class TextAnonymizer(object):
             "TELEFON": "[TELEFON]",
             "EMAIL": "[EMAIL]",
         }
-        self._supported_NE: Tuple[str, str, str, str] = ("PER", "LOC", "ORG", "MISC")
+        self._supported_NE: List[str] = ["PER", "LOC", "ORG"]
 
         if self.mask_misc:
             self.mapping.update({"MISC": "DIVERSE"})
+            self._supported_NE = ["PER", "LOC", "ORG", "MISC"]
 
         if self.suppression:
             self.mapping = {key: "XXX" for key in self.mapping}
@@ -189,7 +191,7 @@ class TextAnonymizer(object):
         current_individuals = self.individuals.get(index, {})
 
         for method in masking_order:
-            if method != "NER":
+            if method != "NER" and method in self.mapping:
                 method_entitites = methods[method](text)
                 method_entitites = method_entitites.union(
                     current_individuals.get(method, set([]))
@@ -198,10 +200,16 @@ class TextAnonymizer(object):
             else:
                 # Handle DaCy entities
                 for ent_name in ner_entities:
-                    rm_ents = ner_entities[ent_name].union(
-                        current_individuals.get(ent_name, set())
-                    )
-                    text = self.mask_entities(text, rm_ents, ent_name)
+                    if ent_name in self.mapping:
+                        rm_ents = ner_entities[ent_name].union(
+                            current_individuals.get(ent_name, set())
+                        )
+                        text = self.mask_entities(text, rm_ents, ent_name)
+
+                        if ent_name == "PER" and len(rm_ents) == 0:
+                            logging.warning(
+                                f"No person found in text at index {index} of text corpus"
+                            )
 
         return text
 
@@ -256,6 +264,8 @@ class TextAnonymizer(object):
         custom_functions: Dict[str, Callable] = {},
         batch_size: int = 8,
         n_process: int = num_cpus,
+        logging_file: str = None,
+        loglevel: str = "DEBUG",
     ) -> List[str]:
         """
         Mask a corpus of danish text with provided methods
@@ -265,11 +275,30 @@ class TextAnonymizer(object):
             custom_functions: Dictionary containing custom masking functions as values and their names as keys
             batch_size: Used for DaCy running in batch mode
             n_process: Number of CPU cores to split computational on
+            logging_file: Save log to file
 
         Returns:
             Anonymized version of the corpus
 
         """
+        log_level = getattr(logging, loglevel.upper(), None)
+        if logging_file:
+            logging.basicConfig(
+                filename=logging_file,
+                filemode="w",
+                format="%(asctime)s - %(levelname)s: %(message)s",
+                datefmt="%d-%b-%y %H:%M:%S",
+                level=log_level,
+            )
+        else:
+            logging.basicConfig(
+                format="%(asctime)s - %(levelname)s: %(message)s",
+                datefmt="%d-%b-%y %H:%M:%S",
+                level=log_level,
+            )
+        logging.info(f"Texts within corpus: {len(self.corpus)}")
+        logging.info(f"Batch size for DaCy: {batch_size}")
+        logging.info(f"Number of processes: {n_process}")
 
         methods = {
             "CPR": self.find_cpr,
@@ -280,13 +309,17 @@ class TextAnonymizer(object):
         methods.update(custom_functions)
 
         if "NER" in masking_order:
+            logging.info("Running DaCy Named Entity Recognition...")
             entities = self._batch_prediction_DaCy(batch_size, n_process)
+            logging.info("Finished DaCy...")
         else:
             entities = [{} for x in self.corpus]
 
         self.transformed_corpus = []
+        logging.info("Starting masking...")
         for i, text in enumerate(self.corpus):
             text = self._apply_masks(text, methods, masking_order, entities[i], i)
             self.transformed_corpus.append(text)
 
+        logging.info("Completed masking!")
         return self.transformed_corpus

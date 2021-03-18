@@ -39,7 +39,7 @@ def test_corpus_mask(response):
         "og email: Email 3. Person 1 er en 20 årig mand.",
     ]
     CorpusObj = TextPseudonymizer(test_corpus)
-    masked_corpus = CorpusObj.mask_corpus()
+    masked_corpus = CorpusObj.mask_corpus(loglevel="CRITICAL")
 
     assert masked_corpus == test_output, "{}\nvs.\n{}".format(
         masked_corpus[0], test_output[0]
@@ -81,7 +81,7 @@ def test_prior_individuals(response):
         "Person 3 er en mand som bor i Lokation 1 og arbejder i Organisation 4",
     ]
     CorpusObj = TextPseudonymizer(test_corpus, individuals=individuals)
-    masked_corpus = CorpusObj.mask_corpus()
+    masked_corpus = CorpusObj.mask_corpus(loglevel="CRITICAL")
 
     assert masked_corpus == test_output, "{}\nvs.\n{}".format(
         masked_corpus[0], test_output[0]

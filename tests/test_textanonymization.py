@@ -82,7 +82,7 @@ def test_corpus_mask(response):
         "og email: [EMAIL]. [PERSON] er en 20 årig mand.",
     ]
     CorpusObj = TextAnonymizer(test_corpus)
-    masked_corpus = CorpusObj.mask_corpus()
+    masked_corpus = CorpusObj.mask_corpus(loglevel="CRITICAL")
 
     assert masked_corpus == test_output, "{}\nvs.\n{}".format(
         masked_corpus[0], test_output[0]
@@ -126,6 +126,7 @@ def test_custom_mask(response):
     masked_corpus = CorpusObj.mask_corpus(
         masking_order=["CPR", "TELEFON", "EMAIL", "NER", "ALDER"],
         custom_functions={"ALDER": custom_mask_age},
+        loglevel="CRITICAL",
     )
 
     assert masked_corpus == test_output, "{}\nvs.\n{}".format(

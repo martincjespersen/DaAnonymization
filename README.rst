@@ -46,6 +46,7 @@ Features
 - Allow anonymizing using suppression
 - Allow masking to be aware of prior knowledge about individuals occuring in the texts
 - Pseudonymization module (Person 1, Person 2 etc.)
+- Logging to masked_corpus function, enabling tracking of warning if no person was found in a text
 
 
 Installation
@@ -221,7 +222,6 @@ In the table 1, the DaNE dataset had all first name resampled (female only due t
 Next up
 --------
 
-* Add logging to the pipeline
 * Add numerical mask/adding noise component
 * Test DaCy for possible bias with person entities (compared to DaNLP)
 * When SpaCy fixed multiprocessing in nlp.pipe, remove current hack
