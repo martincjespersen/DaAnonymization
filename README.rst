@@ -216,9 +216,7 @@ In the table 1, the DaNE dataset had all first name resampled (female only due t
 Next up
 --------
 
-* Add test on >512 tokens sentence
 * Add logging to the pipeline
 * Add numerical mask/adding noise component
-* Test NER models for possible bias with person entities
-* Implement pseudonymization module (Person 1, Person 2 etc.)
+* Test DaCy for possible bias with person entities (compared to DaNLP)
 * When SpaCy fixed multiprocessing in nlp.pipe, remove current hack
