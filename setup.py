@@ -11,12 +11,9 @@ with open("HISTORY.rst") as history_file:
     history = history_file.read()
 
 requirements = [
-    "joblib==1.0.1",
-    "spacy==3.0.3",
+    "spacy>=3.0.3",
     "torch==1.8.0",
-    "spacy-transformers==1.0.1",
-    "transformers==3.1.0",
-    "gensim==3.8.1",
+    "spacy-transformers>=1.0.1",
     "pip==19.2.3",
     "click==7.1.2",
     "smart-open==3.0.0",
