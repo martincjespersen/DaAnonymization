@@ -16,10 +16,10 @@ Anonymization tool for Danish text
         :target: https://textanonymization.readthedocs.io/en/latest/?version=latest
         :alt: Documentation Status
 
-
 .. image:: https://pyup.io/repos/github/martincjespersen/textanonymization/shield.svg
      :target: https://pyup.io/repos/github/martincjespersen/textanonymization/
      :alt: Updates
+
 
 Description
 -----------
@@ -66,17 +66,20 @@ To download the model from DaCy can be found here: `MartinCJ Google Drive <https
 
 Quickstart
 ----------
-DaAnonymization's two main components are **TextAnonymizer** and **TextPseudonymizer** which both uses their ``mask_corpus`` function to anonymize/pseudonymize text by removing person, location, organization, email, telephone number and CPR. The order of these masking methods are by default CPR, telephone number, email and NER (PER,LOC,ORG) as NER will identify names in the emails.
+DaAnonymization's two main components are **TextAnonymizer** and **TextPseudonymizer** which both uses their ``mask_corpus`` function to anonymize/pseudonymize text by removing person, location, organization, email, telephone number and CPR. The order of these masking methods are by default CPR, telephone number, email and NER (PER,LOC,ORG) as NER will identify names in the emails. The following example shows an example of applying default anonymization and how it also **zero shots to english**.
 
 .. code-block:: python
 
     from textprivacy import TextAnonymizer
 
-    # list of texts
+    # list of texts (example with zero shotting to english)
     corpus = [
         "Hej, jeg hedder Martin Jespersen og er fra Danmark og arbejder i "
         "Deloitte, mit cpr er 010203-2010, telefon: +4545454545 "
         "og email: martin.martin@gmail.com",
+        "Hi, my name is Martin Jespersen and work in Deloitte. "
+        "I used to be a PhD. at DTU in B-cell immunoinformatics "
+        "at Anker Engelunds Vej 1 Bygning 101A, 2800 Kgs. Lyngby.",
     ]
 
     Anonymizer = TextAnonymizer(corpus)
@@ -94,6 +97,9 @@ Running this script outputs the following:
 
     Hej, jeg hedder [PERSON] og er fra [LOKATION] og arbejder i [ORGANISATION], mit cpr er [CPR],
     telefon: [TELEFON] og email: [EMAIL]
+
+    Hi, my name is [PERSON] and work in [ORGANISATION]. I used to be a PhD. at [ORGANISATION]
+    in B-cell immunoinformatics at [LOKATION].
 
 Using custom masking functions
 ------------------------------
