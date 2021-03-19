@@ -25,12 +25,16 @@ elif platform == "win32":
 # Hack to make DaCy multiprocessable for both spawn and fork (SpaCy 3.0 issue with pickle)
 torch.set_num_threads(1)
 num_cpus: int = int(os.cpu_count())  # type: ignore
+path = os.path.dirname(os.path.realpath(__file__)).replace("textprivacy", "")
 dacy_path: str = os.environ.get(
     "DACY",
-    "da_dacy_large_tft-0.0.0/da_dacy_large_tft/da_dacy_large_tft-0.0.0",
+    "{}/da_dacy_large_tft-0.0.0/da_dacy_large_tft/da_dacy_large_tft-0.0.0".format(path),
 )
+print(dacy_path)
+print(os.path.dirname(os.path.realpath(__file__)))
 ner_model: nn.Module = None
 if os.path.exists(dacy_path):
+    print("here")
     ner_model = spacy.load(dacy_path)  # type: ignore
 
 
