@@ -53,16 +53,13 @@ Installation
 ------------
 To install from source:
 
+A requirement for DaAnonymization is DaCy, which can be installed following the instructions here: `Dacy GitHub <https://github.com/KennethEnevoldsen/DaCy>`_
+
 .. code-block:: bash
 
     git clone https://github.com/martincjespersen/DaAnonymization.git
     cd DaAnonymization
     python setup.py install
-
-**Note:**
-To use DaCy as a NER model you need to download the **large model** folder and place it within the root of this repository or setting the path in an environmental variable ``DACY = path_to_dacyfolder``.
-To download the model from DaCy can be found here: `MartinCJ Google Drive <https://drive.google.com/file/d/1fHyYGG01pFdMpynerxl_JaX_XZh_z0kl/view?usp=sharing>`_
-
 
 Quickstart
 ----------
