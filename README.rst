@@ -114,8 +114,6 @@ As each project can have specific needs, DaAnonymization supports adding custom 
     from textprivacy import TextAnonymizer
     import re
 
-
-
     # Takes string as input and returns a set of all occurences
     example_custom_function = lambda x: set(list(re.findall(r"\d+ år", x)))
 
