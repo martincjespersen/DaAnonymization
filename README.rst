@@ -51,9 +51,7 @@ Features
 
 Installation
 ------------
-
-
-1. First install from source:
+**1. First install from source**
 
 .. code-block:: bash
 
@@ -61,7 +59,8 @@ Installation
     cd DaAnonymization
     python setup.py install
 
-2. Install DaCy
+**2. Install DaCy**
+
 A requirement for DaAnonymization is DaCy, which can be installed following the instructions here: `Dacy GitHub <https://github.com/KennethEnevoldsen/DaCy>`_
 
 Quickstart
