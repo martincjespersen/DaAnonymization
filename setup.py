@@ -11,6 +11,7 @@ with open("HISTORY.rst") as history_file:
     history = history_file.read()
 
 requirements = [
+    "transformers==3.1.0",
     "torch==1.8.0",
     "pip==19.2.3",
     "click==7.1.2",

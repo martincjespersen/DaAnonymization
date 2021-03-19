@@ -51,9 +51,9 @@ Features
 
 Installation
 ------------
-To install from source:
-
 A requirement for DaAnonymization is DaCy, which can be installed following the instructions here: `Dacy GitHub <https://github.com/KennethEnevoldsen/DaCy>`_
+
+To install from source:
 
 .. code-block:: bash
 
@@ -63,7 +63,11 @@ A requirement for DaAnonymization is DaCy, which can be installed following the 
 
 Quickstart
 ----------
-DaAnonymization's two main components are **TextAnonymizer** and **TextPseudonymizer** which both uses their ``mask_corpus`` function to anonymize/pseudonymize text by removing person, location, organization, email, telephone number and CPR. The order of these masking methods are by default CPR, telephone number, email and NER (PER,LOC,ORG) as NER will identify names in the emails. The following example shows an example of applying default anonymization and how it also **zero shots to english**.
+DaAnonymization's two main components are:
+- TextAnonymizer
+- TextPseudonymizer
+
+Both components uses their ``mask_corpus`` function to anonymize/pseudonymize text by removing person, location, organization, email, telephone number and CPR. The order of these masking methods are by default CPR, telephone number, email and NER (PER,LOC,ORG) as NER will identify names in the emails. The following example shows an example of applying default anonymization and how it also **zero shots to english**.
 
 .. code-block:: python
 
