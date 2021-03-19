@@ -78,7 +78,7 @@ DaAnonymization's two main components are **TextAnonymizer** and **TextPseudonym
         "Deloitte, mit cpr er 010203-2010, telefon: +4545454545 "
         "og email: martin.martin@gmail.com",
         "Hi, my name is Martin Jespersen and work in Deloitte. "
-        "I used to be a PhD. at DTU in B-cell immunoinformatics "
+        "I used to be a PhD. at DTU in Machine Learning and B-cell immunoinformatics "
         "at Anker Engelunds Vej 1 Bygning 101A, 2800 Kgs. Lyngby.",
     ]
 
@@ -99,7 +99,8 @@ Running this script outputs the following:
     telefon: [TELEFON] og email: [EMAIL]
 
     Hi, my name is [PERSON] and work in [ORGANISATION]. I used to be a PhD. at [ORGANISATION]
-    in B-cell immunoinformatics at [LOKATION].
+    in Machine Learning and B-cell immunoinformatics at [LOKATION].
+
 
 Using custom masking functions
 ------------------------------
