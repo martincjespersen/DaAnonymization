@@ -25,7 +25,7 @@ Description
 -----------
 A simple pipeline wrapped around SpaCy and DaCy for anonymizing danish corpora. The pipeline allows for custom functions to be implemented and piped in combination with custom functions.
 
-The **DaCy model** is built on **multilingual RoBERTa** which enables **zero shot learning** for other languagues ultimately providing a robust named entity recognition model for anonymization that is able to handle noisy Danish text data which could include other languages.
+The **DaCy model** is built on **multilingual RoBERTa** which enables **cross-lingual transfer** for other languagues ultimately providing a robust named entity recognition model for anonymization that is able to handle noisy Danish text data which could include other languages.
 
 Languages used in the multilingual RoBERTa can be found in appendix A of XLM-RoBERTa paper: `Unsupervised Cross lingual Representation Learning at Scale <https://arxiv.org/pdf/1911.02116.pdf>`_
 
@@ -69,13 +69,13 @@ DaAnonymization's two main components are:
 - TextAnonymizer
 - TextPseudonymizer
 
-Both components uses their ``mask_corpus`` function to anonymize/pseudonymize text by removing person, location, organization, email, telephone number and CPR. The order of these masking methods are by default CPR, telephone number, email and NER (PER,LOC,ORG) as NER will identify names in the emails. The following example shows an example of applying default anonymization and how it also **zero shots to english**.
+Both components uses their ``mask_corpus`` function to anonymize/pseudonymize text by removing person, location, organization, email, telephone number and CPR. The order of these masking methods are by default CPR, telephone number, email and NER (PER,LOC,ORG) as NER will identify names in the emails. The following example shows an example of applying default anonymization and how it also **cross-lingual transfer to english**.
 
 .. code-block:: python
 
     from textprivacy import TextAnonymizer
 
-    # list of texts (example with zero shotting to english)
+    # list of texts (example with cross-lingual transfer to english)
     corpus = [
         "Hej, jeg hedder Martin Jespersen og er fra Danmark og arbejder i "
         "Deloitte, mit cpr er 010203-2010, telefon: +4545454545 "
