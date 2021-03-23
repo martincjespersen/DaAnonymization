@@ -2,6 +2,7 @@
 
 from typing import List, Dict, Set, Callable
 from textprivacy.textanonymization import TextAnonymizer
+from textprivacy.utils import noisy_numbers
 
 import logging
 
@@ -23,9 +24,13 @@ class TextPseudonymizer(TextAnonymizer):
         corpus: List[str] = [],
         mask_misc: bool = False,
         individuals: Dict[int, Dict[int, Dict[str, Set[str]]]] = {},
+        mask_numbers: bool = False,
+        epsilon: float = None,
     ):
         super(TextPseudonymizer, self).__init__(corpus, mask_misc, False)
         self.individuals = individuals  # type: ignore
+        self.mask_numbers = mask_numbers
+        self.epsilon = epsilon
         self.mapping: Dict[str, str] = {
             "PER": "Person",
             "LOC": "Lokation",
@@ -39,7 +44,11 @@ class TextPseudonymizer(TextAnonymizer):
 
         if self.mask_misc:
             self.mapping.update({"MISC": "Diverse"})
-            self._supported_NE = ["PER", "LOC", "ORG", "MISC"]
+            self._supported_NE.append("MISC")
+
+        if self.mask_numbers:
+            self.mapping.update({"NUM": "Nummer"})
+            self._supported_NE.append("NUM")
 
     """
     ################## Helper functions #################
@@ -159,9 +168,18 @@ class TextPseudonymizer(TextAnonymizer):
                 else:
                     for ent in self._supported_NE:
                         if ent in individuals[person]:
-                            text = self.mask_entities(
-                                text, individuals[person][ent], ent, suffix=suffix
-                            )
+                            if ent == "NUM" and self.epsilon:
+                                text = noisy_numbers(
+                                    text,
+                                    individuals[person][ent],
+                                    self.epsilon,
+                                    placeholder=self.mapping[ent],
+                                    suffix=suffix,
+                                )
+                            else:
+                                text = self.mask_entities(
+                                    text, individuals[person][ent], ent, suffix=suffix
+                                )
                             if ent == "PER":
                                 total_people += len(individuals[person][ent])
 

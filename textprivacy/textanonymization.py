@@ -13,6 +13,8 @@ import torch.nn as nn
 import multiprocessing
 import numpy as np
 
+from textprivacy.utils import noisy_numbers
+
 spacy.prefer_gpu()
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -66,10 +68,14 @@ class TextAnonymizer(object):
         mask_misc: bool = False,
         suppression: bool = False,
         individuals: Dict[int, Dict[str, Set[str]]] = {},
+        mask_numbers: bool = False,
+        epsilon: float = None,
     ):
         super(TextAnonymizer, self).__init__()
         self.corpus = corpus
         self.mask_misc = mask_misc
+        self.mask_numbers = mask_numbers
+        self.epsilon = epsilon
         self.suppression = suppression
         self.individuals = individuals
         self.transformed_corpus: List[str]
@@ -84,8 +90,12 @@ class TextAnonymizer(object):
         self._supported_NE: List[str] = ["PER", "LOC", "ORG"]
 
         if self.mask_misc:
-            self.mapping.update({"MISC": "DIVERSE"})
-            self._supported_NE = ["PER", "LOC", "ORG", "MISC"]
+            self.mapping.update({"MISC": "[DIVERSE]"})
+            self._supported_NE.append("MISC")
+
+        if self.mask_numbers:
+            self.mapping.update({"NUM": "[NUMMER]"})
+            self._supported_NE.append("NUM")
 
         if self.suppression:
             self.mapping = {key: "XXX" for key in self.mapping}
@@ -153,7 +163,7 @@ class TextAnonymizer(object):
         Masks a given entity from a text
 
         Args:
-            text: Text to remove emails from
+            text: Text to remove entity from
             entities: Set of entities to remove
             ent_type: Type of entity to determine placeholder to replace entity with
             suffix: A suffix to the placeholder (e.g., Person X)
@@ -195,7 +205,6 @@ class TextAnonymizer(object):
         """
 
         current_individuals = self.individuals.get(index, {})
-
         for method in masking_order:
             if method != "NER" and method in self.mapping:
                 method_entitites = methods[method](text)
@@ -210,7 +219,16 @@ class TextAnonymizer(object):
                         rm_ents = ner_entities[ent_name].union(
                             current_individuals.get(ent_name, set())
                         )
-                        text = self.mask_entities(text, rm_ents, ent_name)
+
+                        if ent_name == "NUM" and self.epsilon:
+                            text = noisy_numbers(
+                                text,
+                                rm_ents,
+                                self.epsilon,
+                                placeholder=self.mapping[ent_name],
+                            )
+                        else:
+                            text = self.mask_entities(text, rm_ents, ent_name)
 
                         if ent_name == "PER" and len(rm_ents) == 0:
                             logging.warning(
@@ -255,6 +273,13 @@ class TextAnonymizer(object):
             for ent in doc.ents:
                 if ent.label_ in text_entities:
                     text_entities[ent.label_].add(ent.text)
+
+            if "NUM" in self.mapping:
+                # get numbers from part of speech tags
+                for token in doc:
+                    # ensure the number isn't in another NER token
+                    if token.tag_ == "NUM" and not token.ent_type_:
+                        text_entities["NUM"].add(token.text)
 
             entities.append(text_entities)
 
