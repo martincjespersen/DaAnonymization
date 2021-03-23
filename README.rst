@@ -47,7 +47,7 @@ Features
 - Allow masking to be aware of prior knowledge about individuals occuring in the texts
 - Pseudonymization module (Person 1, Person 2 etc.)
 - Logging to masked_corpus function, enabling tracking of warning if no person was found in a text
-- Masking or noising with laplace epsilon noise of numbers
+- Beta version: Masking or noising with laplace epsilon noise of numbers
 
 
 Installation
