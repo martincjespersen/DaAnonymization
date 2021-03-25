@@ -2,7 +2,7 @@
 
 from typing import List, Dict, Set, Callable
 from textprivacy.textanonymization import TextAnonymizer
-from textprivacy.utils import noisy_numbers
+from textprivacy.utils import is_valid_number, get_integer, get_float, laplace_noise
 
 import logging
 
@@ -169,7 +169,7 @@ class TextPseudonymizer(TextAnonymizer):
                     for ent in self._supported_NE:
                         if ent in individuals[person]:
                             if ent == "NUM" and self.epsilon:
-                                text = noisy_numbers(
+                                text = self.noisy_numbers(
                                     text,
                                     individuals[person][ent],
                                     self.epsilon,

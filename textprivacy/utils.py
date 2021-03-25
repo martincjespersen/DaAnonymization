@@ -37,46 +37,6 @@ def is_valid_number(number: str) -> str:
     return "integer"
 
 
-def noisy_numbers(
-    text: str,
-    entities: Set[str],
-    epsilon: float,
-    placeholder: str = "[NUMMER]",
-    suffix: str = "",
-) -> str:
-    """
-    Adds noises to numbers
-
-    Args:
-        text: Text to mask numbers from
-        entities: Set of numbers to add noise or remove
-        epsilon: Parameter used for laplace distribution (similar to differential privacy)
-        placeholder: Fallback placeholder for invalid numbers
-        suffix: Fallback suffix for pseudonymized numbers
-
-    Returns:
-        A text with the entity masked
-
-    """
-    sorted_entities = sorted(entities, key=len, reverse=True)
-    for ent in sorted_entities:
-        validity = is_valid_number(ent)
-        precision = None
-        sign = ""
-        if validity == "invalid":
-            text = text.replace(ent, "{}{}".format(placeholder, suffix))
-            continue
-        elif validity == "float":
-            value, precision, sign = get_float(ent)
-        else:
-            value = get_integer(ent)
-        noisy_number = laplace_noise(value, epsilon, sign, validity)
-        string_number = str(round(noisy_number, precision))
-        text = text.replace(ent, string_number)
-
-    return text
-
-
 def get_integer(number: str) -> int:
     """
     Fetches all numbers and returns an integer

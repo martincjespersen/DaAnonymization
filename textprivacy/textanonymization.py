@@ -13,7 +13,7 @@ import torch.nn as nn
 import multiprocessing
 import numpy as np
 
-from textprivacy.utils import noisy_numbers
+from textprivacy.utils import is_valid_number, get_integer, get_float, laplace_noise
 
 spacy.prefer_gpu()
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -28,17 +28,6 @@ elif platform == "win32":
 # Hack to make DaCy multiprocessable for both spawn and fork (SpaCy 3.0 issue with pickle)
 torch.set_num_threads(1)
 num_cpus: int = int(os.cpu_count())  # type: ignore
-# path = os.path.dirname(os.path.realpath(__file__)).replace("textprivacy", "")
-# dacy_path: str = os.environ.get(
-#     "DACY",
-#     "{}/da_dacy_large_tft-0.0.0/da_dacy_large_tft/da_dacy_large_tft-0.0.0".format(path),
-# )
-# print(dacy_path)
-# print(os.path.dirname(os.path.realpath(__file__)))
-# ner_model: nn.Module = None
-# if os.path.exists(dacy_path):
-#     print("here")
-#     ner_model = spacy.load(dacy_path)  # type: ignore
 ner_model = dacy.load("da_dacy_large_tft-0.0.0")
 
 
@@ -177,6 +166,61 @@ class TextAnonymizer(object):
             text = text.replace(ent, "{}{}".format(self.mapping[ent_type], suffix))
         return text
 
+    def noisy_numbers(
+        self,
+        text: str,
+        entities: Set[str],
+        epsilon: float,
+        placeholder: str = "[NUMMER]",
+        suffix: str = "",
+    ) -> str:
+        """
+        Adds noises to numbers
+
+        Args:
+            text: Text to mask numbers from
+            entities: Set of numbers to add noise or remove
+            epsilon: Parameter used for laplace distribution (similar to differential privacy)
+            placeholder: Fallback placeholder for invalid numbers
+            suffix: Fallback suffix for pseudonymized numbers
+
+        Returns:
+            A text with the entity masked
+
+        """
+
+        tokens = ner_model.tokenizer(text)
+
+        words = list()
+        prev_word = ""
+        for token in tokens:
+            # avoid applying noise to pseudo identifiers
+            if token.text not in entities or prev_word in self.mapping.values():
+                prev_word = token.text
+                words.append("{}{}".format(token.text, token.whitespace_))
+                continue
+
+            validity = is_valid_number(token.text)
+            precision = None
+            sign = ""
+            if validity == "invalid":
+                word = "{}{}{}".format(placeholder, suffix, token.whitespace_)
+                prev_word = word
+                words.append(word)
+            elif validity == "float":
+                value, precision, sign = get_float(token.text)
+            else:
+                value = get_integer(token.text)
+            noisy_number = laplace_noise(value, epsilon, sign, validity)
+            string_number = str(round(noisy_number, precision))
+            word = "{}{}".format(string_number, token.whitespace_)
+            prev_word = word
+            words.append(word)
+
+            prev_word = word
+
+        return "".join(words)
+
     """
     ################## Helper functions #################
     """
@@ -221,7 +265,7 @@ class TextAnonymizer(object):
                         )
 
                         if ent_name == "NUM" and self.epsilon:
-                            text = noisy_numbers(
+                            text = self.noisy_numbers(
                                 text,
                                 rm_ents,
                                 self.epsilon,
