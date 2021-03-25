@@ -377,6 +377,7 @@ class TextAnonymizer(object):
         logging.info(f"Batch size for DaCy: {batch_size}")
         logging.info(f"Number of processes: {n_process}")
         logging.info(f"Numerical Laplace epsilon: {self.epsilon}")
+        logging.info(f"Suppression: {self.suppression}")
 
         methods = {
             "CPR": self.find_cpr,
