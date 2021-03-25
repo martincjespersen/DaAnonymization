@@ -372,10 +372,11 @@ class TextAnonymizer(object):
                 datefmt="%d-%b-%y %H:%M:%S",
                 level=log_level,
             )
-        logging.info("##### Starting masking corpus #####")
+        logging.info("##### General settings #####")
         logging.info(f"Texts within corpus: {len(self.corpus)}")
         logging.info(f"Batch size for DaCy: {batch_size}")
         logging.info(f"Number of processes: {n_process}")
+        logging.info(f"Numerical Laplace epsilon: {self.epsilon}")
 
         methods = {
             "CPR": self.find_cpr,
@@ -385,6 +386,13 @@ class TextAnonymizer(object):
 
         methods.update(custom_functions)
 
+        entities_masked = [x for x in masking_order if x != "NER"]
+        if "NER" in masking_order:
+            entities_masked = entities_masked + self._supported_NE
+
+        logging.info("Entities: {}".format(",".join(entities_masked)))
+
+        logging.info("##### Starting masking corpus #####")
         if "NER" in masking_order:
             logging.info("Running DaCy Named Entity Recognition...")
             entities = self._batch_prediction_DaCy(batch_size, n_process)
