@@ -22,7 +22,7 @@ def is_valid_number(number: str) -> str:
     end_comma = reversed_num.index(",") if commas > 0 else 1000
     last_delimiter = end_dot - end_comma
 
-    special_characters = "!@#$%^&*()+?_=<>/"
+    special_characters = ":;!@#$%^&*()+?_=<>/"
 
     if (dots == 1 and last_delimiter < 0) or (commas == 1 and last_delimiter > 0):
         return "float"

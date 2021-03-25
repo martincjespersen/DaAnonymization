@@ -322,7 +322,8 @@ class TextAnonymizer(object):
                 # get numbers from part of speech tags
                 for token in doc:
                     # ensure the number isn't in another NER token
-                    if token.tag_ == "NUM" and not token.ent_type_:
+                    digits = len([x for x in token.text if x.isdigit()])
+                    if token.tag_ == "NUM" and not token.ent_type_ and digits > 0:
                         text_entities["NUM"].add(token.text)
 
             entities.append(text_entities)
@@ -404,7 +405,14 @@ class TextAnonymizer(object):
         self.transformed_corpus = []
         logging.info("Starting masking...")
         for i, text in enumerate(self.corpus):
-            text = self._apply_masks(text, methods, masking_order, entities[i], i)
+            try:
+                text = self._apply_masks(text, methods, masking_order, entities[i], i)
+            except Exception as e:
+                logging.critical(
+                    f"Text at index {i} in corpus failed to be transformed with error: {str(e)}"
+                )
+                text = ""
+
             self.transformed_corpus.append(text)
 
         logging.info("##### Completed masking! #####")
