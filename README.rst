@@ -67,6 +67,7 @@ A requirement for DaAnonymization is DaCy, which can be installed following the 
 Quickstart
 ----------
 DaAnonymization's two main components are:
+
 - TextAnonymizer
 - TextPseudonymizer
 

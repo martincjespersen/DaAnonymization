@@ -20,8 +20,8 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 if platform == "linux" or platform == "linux2" or platform == "darwin":
     multiprocessing.set_start_method("fork")
-elif platform == "win32":
-    multiprocessing.set_start_method("spawn")
+# elif platform == "win32":
+#     multiprocessing.set_start_method("spawn")
 
 
 ######### DaCy multiprocessing hack START #########
