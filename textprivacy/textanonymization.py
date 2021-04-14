@@ -307,7 +307,7 @@ class TextAnonymizer(object):
 
             results = [item for sublist in results for item in sublist]
         else:
-            results = ner_model.pipe(self.corpus, batch_size)
+            results = ner_model.pipe(self.corpus, batch_size=batch_size)
 
         entities: List[Dict[str, Set[str]]] = list()
 
