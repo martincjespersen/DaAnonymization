@@ -307,6 +307,7 @@ class TextAnonymizer(object):
 
             results = [item for sublist in results for item in sublist]
         else:
+            torch.set_num_threads(10)
             results = ner_model.pipe(self.corpus, batch_size=batch_size)
 
         entities: List[Dict[str, Set[str]]] = list()
