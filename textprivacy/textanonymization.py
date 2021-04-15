@@ -296,7 +296,7 @@ class TextAnonymizer(object):
 
         """
 
-        if device != "cuda" and n_process != 1:
+        if device != "cuda" and platform != "win32":
             # processes = n_process if n_process < len(self.corpus) else len(self.corpus)
             batches = (
                 self.corpus[pos : pos + batch_size]
