@@ -174,6 +174,7 @@ class TextAnonymizer(object):
                 ent_regex = r"(.?)({})(.?)".format(reg_ent)
                 regexs = re.findall(ent_regex, text)
 
+                # ensure entities are not subwords or subnumbers
                 for reg_prefix, word, reg_suffix in regexs:
                     c_word = (
                         word.replace("\\", "\\\\")
@@ -181,7 +182,6 @@ class TextAnonymizer(object):
                         .replace(".", "\\.")
                         .replace("*", "\\*")
                     )
-                    # ensure entity is not part of word or larger number
                     if not re.search("[a-zA-Z0-9]", reg_prefix) and not re.search(
                         "[a-zA-Z0-9]", reg_suffix
                     ):
