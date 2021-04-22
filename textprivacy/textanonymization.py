@@ -163,7 +163,8 @@ class TextAnonymizer(object):
         """
         sorted_entities = sorted(entities, key=len, reverse=True)
         for ent in sorted_entities:
-            text = text.replace(ent, "{}{}".format(self.mapping[ent_type], suffix))
+            if ent != "":
+                text = text.replace(ent, "{}{}".format(self.mapping[ent_type], suffix))
         return text
 
     def noisy_numbers(
