@@ -181,6 +181,7 @@ class TextAnonymizer(object):
                         .replace(".", "\\.")
                         .replace("*", "\\*")
                     )
+                    # ensure entity is not part of word or larger number
                     if not re.search("[a-zA-Z0-9]", reg_prefix) and not re.search(
                         "[a-zA-Z0-9]", reg_suffix
                     ):
@@ -190,7 +191,6 @@ class TextAnonymizer(object):
                         )
                         text = re.sub(to_be_masked, to_mask, text)
 
-                # text = text.replace(ent, "{}{}".format(self.mapping[ent_type], suffix))
         return text
 
     def noisy_numbers(
