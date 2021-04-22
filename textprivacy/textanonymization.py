@@ -365,7 +365,6 @@ class TextAnonymizer(object):
         if logging_file:
             logging.basicConfig(
                 filename=logging_file,
-                filemode="w",
                 format="%(asctime)s - %(levelname)s: %(message)s",
                 datefmt="%d-%b-%y %H:%M:%S",
                 level=log_level,
