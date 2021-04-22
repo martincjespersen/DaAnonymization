@@ -163,6 +163,7 @@ class TextAnonymizer(object):
         """
         sorted_entities = sorted(list(set(entities)), key=len, reverse=True)
         for ent in sorted_entities:
+            ent = ent.strip()
             if ent != "":
                 reg_ent = (
                     ent.replace("\\", "\\\\")
