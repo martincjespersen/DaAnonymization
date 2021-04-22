@@ -158,6 +158,7 @@ class TextPseudonymizer(TextAnonymizer):
 
         individuals = self._update_individuals(all_entities, index)
         total_people = 0
+
         for person in sorted(individuals):
             suffix = " {}".format(person)
             for method in masking_order:
@@ -167,6 +168,7 @@ class TextPseudonymizer(TextAnonymizer):
                     )
                 else:
                     for ent in self._supported_NE:
+
                         if ent in individuals[person]:
                             if ent == "NUM" and self.epsilon:
                                 text = self.noisy_numbers(

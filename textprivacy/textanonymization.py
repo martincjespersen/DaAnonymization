@@ -161,10 +161,35 @@ class TextAnonymizer(object):
             A text with the entity masked
 
         """
-        sorted_entities = sorted(entities, key=len, reverse=True)
+        sorted_entities = sorted(list(set(entities)), key=len, reverse=True)
         for ent in sorted_entities:
             if ent != "":
-                text = text.replace(ent, "{}{}".format(self.mapping[ent_type], suffix))
+                reg_ent = (
+                    ent.replace("\\", "\\\\")
+                    .replace("+", "\\+")
+                    .replace(".", "\\.")
+                    .replace("*", "\\*")
+                )
+                ent_regex = r"(.?)({})(.?)".format(reg_ent)
+                regexs = re.findall(ent_regex, text)
+
+                for reg_prefix, word, reg_suffix in regexs:
+                    c_word = (
+                        word.replace("\\", "\\\\")
+                        .replace("+", "\\+")
+                        .replace(".", "\\.")
+                        .replace("*", "\\*")
+                    )
+                    if not re.search("[a-zA-Z0-9]", reg_prefix) and not re.search(
+                        "[a-zA-Z0-9]", reg_suffix
+                    ):
+                        to_be_masked = r"{}{}{}".format(reg_prefix, c_word, reg_suffix)
+                        to_mask = r"{}{}{}{}".format(
+                            reg_prefix, self.mapping[ent_type], suffix, reg_suffix
+                        )
+                        text = re.sub(to_be_masked, to_mask, text)
+
+                # text = text.replace(ent, "{}{}".format(self.mapping[ent_type], suffix))
         return text
 
     def noisy_numbers(
