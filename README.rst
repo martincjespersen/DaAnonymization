@@ -208,7 +208,9 @@ Fairness evaluations
 --------------------
 **Disclaimer:** Work in progress on: `Benchmark Fairness <https://colab.research.google.com/drive/1qVdP99ZSqROfalUh63DVJ-5A6MhWrT3_?usp=sharing>`_
 
-In the table 1, the DaNE dataset had all first name resampled (female only due to data) first a sanity check using female first names with danish origin (Sampled Danish names) and following other female names with origins than Danish (Sampled Other names). Both F1 scores are sampled by reproducing it 100 times and averaging. A small drop is found using female danish names only and further dropped using names from different origins.
+In the table 1, the DaNE dataset had all first name resampled (female only due to data) first a sanity check using female first names with danish origin (Sampled Danish names) and following other female names with origins than Danish (Sampled Other names). Both F1 scores are sampled by reproducing it 100 times and average is reported together with standard deviation in the parentheses. The stars * on columns means tested on goldstandard tokens, where without means it own internal tokenizer was used (more realistic).
+
+A drop is observed using female danish names only and further dropped using names from different origins for the DaNLP model, whereas the DaCy model seems to be more robust to foreign names.
 
 
 .. list-table:: Table 1: Fairness of names of other origin than Danish (**F1 scores**)
@@ -216,17 +218,20 @@ In the table 1, the DaNE dataset had all first name resampled (female only due t
    :header-rows: 1
 
    * - Model
-     - DaNE (original)
-     - Sampled Danish names
-     - Sampled Other names
+     - DaNE *
+     - Sampled Danish names*
+     - Sampled Other names*
+     - DaNE
    * - DaNLP NER
      - 92.8
-     - 90.6
-     - 89.0
+     - 90.5 (.013)
+     - 88.8 (.016)
+     -
    * - DaCy
+     - 94.1
+     - 94.2 (.008)
+     - 93.8 (.009)
      - 95.5
-     - TBD
-     - TBD
 
 
 Next up
