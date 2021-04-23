@@ -226,7 +226,7 @@ A drop is observed using female danish names only and further dropped using name
      - 92.8
      - 90.5 (.013)
      - 88.8 (.016)
-     -
+     - NA
    * - DaCy
      - 94.1
      - 94.2 (.008)
