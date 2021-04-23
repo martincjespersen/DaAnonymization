@@ -218,9 +218,9 @@ A drop is observed using female danish names only and further dropped using name
    :header-rows: 1
 
    * - Model
-     - DaNE ``*``
-     - Sampled Danish names``*``
-     - Sampled Other names``*``
+     - DaNE
+     - Sampled Danish names
+     - Sampled Other names
      - DaNE
    * - DaNLP NER
      - 92.8
