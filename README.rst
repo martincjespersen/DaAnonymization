@@ -224,13 +224,13 @@ A drop is observed using female danish names only and further dropped using name
      - DaNE
    * - DaNLP NER
      - 92.8
-     - 90.5 (.013)
-     - 88.8 (.016)
+     - 90.5
+     - 88.8
      - NA
    * - DaCy
      - 94.1
-     - 94.2 (.008)
-     - 93.8 (.009)
+     - 94.2
+     - 93.8
      - 95.5
 
 
