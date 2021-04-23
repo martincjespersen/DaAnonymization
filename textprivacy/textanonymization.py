@@ -165,30 +165,22 @@ class TextAnonymizer(object):
         for ent in sorted_entities:
             ent = ent.strip()
             if ent != "":
-                reg_ent = (
-                    ent.replace("\\", "\\\\")
-                    .replace("+", "\\+")
-                    .replace(".", "\\.")
-                    .replace("*", "\\*")
-                )
-                ent_regex = r"(.?)({})(.?)".format(reg_ent)
+                ent_regex = r"(.?)({})(.?)".format(re.escape(ent))
                 regexs = re.findall(ent_regex, text)
 
                 # ensure entities are not subwords or subnumbers
                 for reg_prefix, word, reg_suffix in regexs:
-                    c_word = (
-                        word.replace("\\", "\\\\")
-                        .replace("+", "\\+")
-                        .replace(".", "\\.")
-                        .replace("*", "\\*")
-                    )
+
                     if not re.search("[a-zA-Z0-9]", reg_prefix) and not re.search(
                         "[a-zA-Z0-9]", reg_suffix
                     ):
-                        to_be_masked = r"{}{}{}".format(reg_prefix, c_word, reg_suffix)
+                        to_be_masked = re.escape(
+                            r"{}{}{}".format(reg_prefix, word, reg_suffix)
+                        )
                         to_mask = r"{}{}{}{}".format(
                             reg_prefix, self.mapping[ent_type], suffix, reg_suffix
                         )
+
                         text = re.sub(to_be_masked, to_mask, text)
 
         return text
@@ -433,13 +425,14 @@ class TextAnonymizer(object):
         self.transformed_corpus = []
         logging.info("Starting masking...")
         for i, text in enumerate(self.corpus):
+            text = self._apply_masks(text, methods, masking_order, entities[i], i)
             try:
                 text = self._apply_masks(text, methods, masking_order, entities[i], i)
             except Exception as e:
                 logging.critical(
                     f"Text at index {i} in corpus failed to be transformed with error: {str(e)}"
                 )
-                text = ""
+                text = f"Text at index {i} in corpus failed to be transformed with error: {str(e)}"
 
             self.transformed_corpus.append(text)
 
