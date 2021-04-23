@@ -214,7 +214,7 @@ A drop is observed using female danish names only and further dropped using name
 
 
 .. list-table:: Table 1: Fairness of names of other origin than Danish (**F1 scores**)
-   :widths: 10 15 15 15
+   :widths: 10 15 15 15 15
    :header-rows: 1
 
    * - Model
@@ -224,13 +224,13 @@ A drop is observed using female danish names only and further dropped using name
      - DaNE
    * - DaNLP NER
      - 92.8
-     - 90.5
-     - 88.8
+     - 90.5 (.013)
+     - 88.8 (.016)
      - NA
    * - DaCy
      - 94.1
-     - 94.2
-     - 93.8
+     - 94.2 (.008)
+     - 93.8 (.009)
      - 95.5
 
 
