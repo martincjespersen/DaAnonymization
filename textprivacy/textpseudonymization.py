@@ -159,31 +159,38 @@ class TextPseudonymizer(TextAnonymizer):
         individuals = self._update_individuals(all_entities, index)
         total_people = 0
 
+        # get all entities into one list
+        masked_entities: List[List[str]] = []
         for person in sorted(individuals):
             suffix = " {}".format(person)
             for method in masking_order:
                 if method != "NER" and method in individuals[person]:
-                    text = self.mask_entities(
-                        text, individuals[person][method], method, suffix=suffix
-                    )
+                    for ent in individuals[person][method]:
+                        if [method, ent, suffix] not in masked_entities:
+                            masked_entities.append([method, ent, suffix])
                 else:
-                    for ent in self._supported_NE:
+                    for ent_ in self._supported_NE:
+                        if ent_ in individuals[person]:
+                            for ent in individuals[person][ent_]:
+                                if [ent_, ent, suffix] not in masked_entities:
+                                    masked_entities.append([ent_, ent, suffix])
 
-                        if ent in individuals[person]:
-                            if ent == "NUM" and self.epsilon:
-                                text = self.noisy_numbers(
-                                    text,
-                                    individuals[person][ent],
-                                    self.epsilon,
-                                    placeholder=self.mapping[ent],
-                                    suffix=suffix,
-                                )
-                            else:
-                                text = self.mask_entities(
-                                    text, individuals[person][ent], ent, suffix=suffix
-                                )
-                            if ent == "PER":
-                                total_people += len(individuals[person][ent])
+        # run through all entities, sorted in descending order of entity size
+        masked_entities = sorted(masked_entities, key=lambda x: len(x[1]), reverse=True)
+        for method, ent, suffix in masked_entities:
+            if method == "NUM" and self.epsilon:
+                text = self.noisy_numbers(
+                    text,
+                    set([ent]),
+                    self.epsilon,
+                    placeholder=self.mapping[method],
+                    suffix=suffix,
+                )
+            else:
+                text = self.mask_entities(text, set([ent]), method, suffix=suffix)
+
+                if method == "PER":
+                    total_people += 1
 
         if total_people == 0:
             logging.warning(f"No person found in text at index {index} of text corpus")

@@ -234,7 +234,6 @@ A drop is observed using female danish names only and further dropped using name
      - 93.8 (.009)
 
 
-
 Next up
 --------
 

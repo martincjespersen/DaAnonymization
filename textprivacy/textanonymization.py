@@ -124,6 +124,7 @@ class TextAnonymizer(object):
                 r"\+\d{2} \d{8}",
                 r"\+\d{2} \d{2}​ \d{2}​ \d{2}​ \d{2}",
                 r"\d{8}",
+                r"\d{4} \d{4}",
                 r"\d{2}​ \d{2}​ \d{2}​​ \d{2}",
             ]
         )
@@ -425,7 +426,6 @@ class TextAnonymizer(object):
         self.transformed_corpus = []
         logging.info("Starting masking...")
         for i, text in enumerate(self.corpus):
-            text = self._apply_masks(text, methods, masking_order, entities[i], i)
             try:
                 text = self._apply_masks(text, methods, masking_order, entities[i], i)
             except Exception as e:
