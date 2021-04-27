@@ -120,14 +120,14 @@ class TextAnonymizer(object):
         tlf_pattern = "|".join(
             [
                 r"\+\d{10}",
-                r"\+\d{4} \d{2}​ \d{2}​ \d{2}",
+                r"\+\d{4} \d{2} \d{2} \d{2}",
                 r"\+\d{2} \d{8}",
-                r"\+\d{2} \d{2}​ \d{2}​ \d{2}​ \d{2}",
-                r"\+\d{2}​ \d{4} \d{4}",
-                r"\d{2}​ \d{4} \d{4}",
+                r"\+\d{2} \d{2} \d{2} \d{2} \d{2}",
+                r"\+\d{2} \d{4} \d{4}",
+                r"\d{2} \d{4} \d{4}",
                 r"\d{8}",
                 r"\d{4} \d{4}",
-                r"\d{2}​ \d{2}​ \d{2}​​ \d{2}",
+                r"\d{2} \d{2} \d{2} \d{2}",
             ]
         )
         tlf_nrs = set(re.findall(tlf_pattern, text))
