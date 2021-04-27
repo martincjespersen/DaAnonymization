@@ -157,6 +157,7 @@ class TextPseudonymizer(TextAnonymizer):
                 all_entities.update(ner_entities)
 
         individuals = self._update_individuals(all_entities, index)
+        self.individuals[index] = individuals  # type: ignore
         total_people = 0
 
         # get all entities into one list
