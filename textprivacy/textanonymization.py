@@ -167,6 +167,8 @@ class TextAnonymizer(object):
         sorted_entities = sorted(list(set(entities)), key=len, reverse=True)
         for ent in sorted_entities:
             ent = ent.strip()
+            if ent_type == "PER":
+                ent.replace(".", "")
             if ent != "":
                 ent_regex = r"(.?)({})(.?)".format(re.escape(ent))
                 regexs = re.findall(ent_regex, text)
