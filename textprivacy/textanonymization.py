@@ -171,16 +171,19 @@ class TextAnonymizer(object):
             ent = ent.strip()
             if ent_type == "PER":
                 ent = ent.replace(".", "")
-            if ent != "":
+            if ent != "" and not (
+                ent_type in ["PER", "LOC", "ORG", "EMAIL", "CPR", "TELEFON"]
+                and len(ent) <= 2
+            ):
                 ent_regex = r"(.?)({})(.?)".format(re.escape(ent))
                 regexs = re.findall(ent_regex, text)
 
                 # ensure entities are not subwords or subnumbers
                 for reg_prefix, word, reg_suffix in regexs:
 
-                    if not re.search("[a-zA-Z0-9]", reg_prefix) and not re.search(
-                        "[a-zA-Z0-9]", reg_suffix
-                    ):
+                    if not re.search(
+                        r"[a-zæøåA-ZÆØÅ0-9]", reg_prefix
+                    ) and not re.search(r"[a-zæøåA-ZÆØÅ0-9]", reg_suffix):
                         to_be_masked = re.escape(
                             r"{}{}{}".format(reg_prefix, word, reg_suffix)
                         )
