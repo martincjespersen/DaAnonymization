@@ -4,4 +4,4 @@ torch==1.8.0
 pip==19.2.3
 click==7.1.2
 smart-open==3.0.0
-git+https://github.com/KennethEnevoldsen/DaCy
+DaCy>=1.1.1,<1.2.0
