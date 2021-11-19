@@ -10,14 +10,9 @@ with open("README.rst") as readme_file:
 with open("HISTORY.rst") as history_file:
     history = history_file.read()
 
-requirements = [
-    "transformers==3.1.0",
-    "torch==1.8.0",
-    "pip==19.2.3",
+requirements = [    
+    "dacy[large]",
     "click==7.1.2",
-    "smart-open==3.0.0",
-    "pytest==4.6.5",
-    "pytest-runner==5.1",
 ]
 
 setup_requirements = [

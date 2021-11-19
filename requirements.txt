@@ -1,7 +1,2 @@
-spacy>=3.0.3
-transformers==3.1.0
-torch==1.8.0
-pip==19.2.3
+dacy[large]==1.2.3
 click==7.1.2
-smart-open==3.0.0
-DaCy>=1.1.1,<1.2.0
