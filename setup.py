@@ -10,8 +10,8 @@ with open("README.rst") as readme_file:
 with open("HISTORY.rst") as history_file:
     history = history_file.read()
 
-requirements = [    
-    "dacy[large]",
+requirements = [
+    "dacy[large]==1.2.3",
     "click==7.1.2",
 ]
 
