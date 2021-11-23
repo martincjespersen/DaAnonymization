@@ -119,7 +119,7 @@ class TextPseudonymizer(TextAnonymizer):
 
         for ent in order_entities:
             if all_entities[ent]:
-                current_individuals = self._update_entity(
+                current_individuals = self._update_entity(  # type: ignore
                     all_entities[ent], current_individuals, ent  # type: ignore
                 )
 

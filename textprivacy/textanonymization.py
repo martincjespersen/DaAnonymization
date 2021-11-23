@@ -18,8 +18,11 @@ from textprivacy.utils import is_valid_number, get_integer, get_float, laplace_n
 spacy.prefer_gpu()
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-if platform == "linux" or platform == "linux2" or platform == "darwin":
-    multiprocessing.set_start_method("fork")
+try:
+    if platform == "linux" or platform == "linux2" or platform == "darwin":
+        multiprocessing.set_start_method("fork")
+except RuntimeError:
+    pass
 # elif platform == "win32":
 #     multiprocessing.set_start_method("spawn")
 

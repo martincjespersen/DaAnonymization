@@ -199,6 +199,20 @@ By using the **optional** input argument ``individuals``, you can add prior info
     arbejder i Organisation 2. Person 3 er en mand som bor i Lokation 1 og arbejder i Organisation 4
 
 
+Demoing using streamlit
+-------------------------------------
+DaAnonymization is now available with an easy demo website created in streamlit.
+
+.. code-block:: bash
+    pip install streamlit==1.2.0
+    streamlit run app.py
+
+Running the code above will result in a website demoing the use of DaAnonymization.
+
+.. figure:: docs/imgs/header.png
+    :width: 150px
+    :align: center
+
 
 Fairness evaluations
 --------------------
