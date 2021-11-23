@@ -203,6 +203,7 @@ Demo using streamlit
 DaAnonymization is now available with an easy demo website created in streamlit.
 
 .. code-block:: bash
+
     pip install streamlit==1.2.0
     streamlit run app.py
 
