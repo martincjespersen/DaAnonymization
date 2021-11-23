@@ -1,5 +1,4 @@
 .. figure:: docs/imgs/header.png
-    :width: 150px
     :align: center
 
 ==================================
