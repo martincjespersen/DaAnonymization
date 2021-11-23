@@ -198,7 +198,7 @@ By using the **optional** input argument ``individuals``, you can add prior info
     arbejder i Organisation 2. Person 3 er en mand som bor i Lokation 1 og arbejder i Organisation 4
 
 
-Demoing using streamlit
+Demo using streamlit
 -------------------------------------
 DaAnonymization is now available with an easy demo website created in streamlit.
 
