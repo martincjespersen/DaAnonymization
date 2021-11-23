@@ -209,8 +209,7 @@ DaAnonymization is now available with an easy demo website created in streamlit.
 
 Running the code above will result in a website demoing the use of DaAnonymization.
 
-.. figure:: docs/imgs/header.png
-    :width: 150px
+.. figure:: docs/imgs/streamlit_app.png
     :align: center
 
 
