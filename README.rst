@@ -5,18 +5,18 @@
 Anonymization tool for Danish text
 ==================================
 
-.. image:: https://img.shields.io/pypi/v/textanonymization.svg
-        :target: https://pypi.python.org/pypi/textanonymization
+.. image:: https://img.shields.io/pypi/v/DaAnonymization.svg
+        :target: https://pypi.python.org/pypi/DaAnonymization
 
-.. image:: https://img.shields.io/travis/martincjespersen/textanonymization.svg
-        :target: https://travis-ci.com/martincjespersen/textanonymization
+.. image:: https://img.shields.io/travis/martincjespersen/DaAnonymization.svg
+        :target: https://travis-ci.com/martincjespersen/DaAnonymization
 
-.. image:: https://readthedocs.org/projects/textanonymization/badge/?version=latest
-        :target: https://textanonymization.readthedocs.io/en/latest/?version=latest
+.. image:: https://readthedocs.org/projects/DaAnonymization/badge/?version=latest
+        :target: https://DaAnonymization.readthedocs.io/en/latest/?version=latest
         :alt: Documentation Status
 
-.. image:: https://pyup.io/repos/github/martincjespersen/textanonymization/shield.svg
-     :target: https://pyup.io/repos/github/martincjespersen/textanonymization/
+.. image:: https://pyup.io/repos/github/martincjespersen/DaAnonymization/shield.svg
+     :target: https://pyup.io/repos/github/martincjespersen/DaAnonymization/
      :alt: Updates
 
 
@@ -51,13 +51,17 @@ Features
 
 Installation
 ------------
-**1. Install from source**
+**Install from pip**
 
 .. code-block:: bash
 
-    git clone https://github.com/martincjespersen/DaAnonymization.git
-    cd DaAnonymization
-    python setup.py install
+    pip install DaAnonymization
+
+**Install from source**
+
+.. code-block:: bash
+
+    pip install git+https://github.com/martincjespersen/DaAnonymization.git
 
 Quickstart
 ----------
