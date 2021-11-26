@@ -8,17 +8,9 @@ Anonymization tool for Danish text
 .. image:: https://img.shields.io/pypi/v/DaAnonymization.svg
         :target: https://pypi.python.org/pypi/DaAnonymization
 
-.. image:: https://img.shields.io/travis/martincjespersen/DaAnonymization.svg
-        :target: https://travis-ci.com/martincjespersen/DaAnonymization
-
-.. image:: https://readthedocs.org/projects/DaAnonymization/badge/?version=latest
-        :target: https://DaAnonymization.readthedocs.io/en/latest/?version=latest
-        :alt: Documentation Status
-
-.. image:: https://pyup.io/repos/github/martincjespersen/DaAnonymization/shield.svg
-     :target: https://pyup.io/repos/github/martincjespersen/DaAnonymization/
-     :alt: Updates
-
+.. image:: https://pepy.tech/badge/DaAnonymization
+    :alt: Downloads
+    :target: https://pepy.tech/project/DaAnonymization/
 
 Description
 -----------
