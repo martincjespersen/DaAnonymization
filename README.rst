@@ -8,9 +8,6 @@ Anonymization tool for Danish text
 .. image:: https://img.shields.io/pypi/v/DaAnonymization.svg
         :target: https://pypi.python.org/pypi/DaAnonymization
 
-.. image:: https://pepy.tech/badge/DaAnonymization
-    :alt: Downloads
-    :target: https://pepy.tech/project/DaAnonymization/
 
 Description
 -----------
