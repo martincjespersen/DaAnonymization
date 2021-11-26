@@ -1,4 +1,4 @@
-"""Console script for aifreport."""
+"""Console script for textprivacy."""
 import argparse
 import sys
 
