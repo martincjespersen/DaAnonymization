@@ -12,7 +12,6 @@ with open("HISTORY.rst") as history_file:
 
 requirements = [
     "dacy[large]==1.2.3",
-    "click==7.1.2",
 ]
 
 setup_requirements = [

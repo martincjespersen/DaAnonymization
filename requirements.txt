@@ -1,2 +1,1 @@
 dacy[large]==1.2.3
-click==7.1.2
