@@ -1,4 +1,4 @@
-dacy[large]==1.2.3
+dacy
 pytest==4.6.5
 pytest-runner==5.
 pre-commit
