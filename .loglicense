@@ -1,0 +1,10 @@
+[loglicense]
+allowed =
+    MIT,
+    BSD-3-Clause,
+    BSD,
+    Apache 2.0,
+    Apache,
+banned =
+    AGPL,
+coverage = 100
