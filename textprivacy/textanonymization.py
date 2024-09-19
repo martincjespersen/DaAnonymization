@@ -31,7 +31,7 @@ except RuntimeError:
 # Hack to make DaCy multiprocessable for both spawn and fork (SpaCy 3.0 issue with pickle)
 torch.set_num_threads(1)
 num_cpus: int = int(os.cpu_count())  # type: ignore
-ner_model = dacy.load("da_dacy_large_tft-0.0.0")
+ner_model = dacy.load("large")
 
 
 def worker(text: List[str]):  # type: ignore
