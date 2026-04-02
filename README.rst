@@ -13,6 +13,7 @@ Anonymization tool for Danish text
     :target: https://pepy.tech/project/DaAnonymization/
 
 
+
 Description
 -----------
 A simple pipeline wrapped around SpaCy and DaCy for anonymizing danish corpora. The pipeline allows for custom functions to be implemented and piped in combination with custom functions.
